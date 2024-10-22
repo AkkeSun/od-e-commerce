@@ -5,8 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 @NoArgsConstructor
 class RegisterTokenRequest {
 
@@ -20,12 +22,6 @@ class RegisterTokenRequest {
     RegisterTokenRequest(String email, String password) {
         this.email = email;
         this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return "{" + "email: '" + email + '\'' +
-            ", password: '" + password + '\'' + '}';
     }
 
     RegisterTokenCommand toCommand() {

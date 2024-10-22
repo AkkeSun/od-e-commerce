@@ -4,8 +4,10 @@ import com.sweettracker.account.account.application.service.register_token.Regis
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 @NoArgsConstructor
 class RegisterTokenResponse {
 
