@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-class FindAccountController {
+class FindAccountInfoController {
 
     private final FindAccountInfoUseCase findAccountInfoUseCase;
 
     @GetMapping("/accounts/info")
-    ApiResponse<FindAccountResponse> findAccountInfo(
+    ApiResponse<FindAccountInfoResponse> findAccountInfo(
         @RequestHeader(name = "Authorization", required = false) String authorization) {
         FindAccountServiceResponse serviceResponse = findAccountInfoUseCase.
             findAccountInfo(authorization);
 
-        return ApiResponse.ok(new FindAccountResponse().of(serviceResponse));
+        return ApiResponse.ok(new FindAccountInfoResponse().of(serviceResponse));
     }
 }

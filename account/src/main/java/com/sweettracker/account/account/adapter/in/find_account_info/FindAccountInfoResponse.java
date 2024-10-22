@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @NoArgsConstructor
-class FindAccountResponse {
+class FindAccountInfoResponse {
 
     private Long id;
     private String email;
@@ -19,7 +19,7 @@ class FindAccountResponse {
     private String role;
 
     @Builder
-    public FindAccountResponse(Long id, String email, String username, String userTel,
+    public FindAccountInfoResponse(Long id, String email, String username, String userTel,
         String address,
         String role) {
         this.id = id;
@@ -30,8 +30,8 @@ class FindAccountResponse {
         this.role = role;
     }
 
-    FindAccountResponse of(FindAccountServiceResponse serviceResponse) {
-        return FindAccountResponse.builder()
+    FindAccountInfoResponse of(FindAccountServiceResponse serviceResponse) {
+        return FindAccountInfoResponse.builder()
             .id(serviceResponse.id())
             .email(serviceResponse.email())
             .username(serviceResponse.username())
