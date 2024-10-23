@@ -1,7 +1,8 @@
 package com.sweettracker.account.account.adapter.out.persistence.jpa;
 
-import static com.sweettracker.account.global.exception.ErrorCode.DoesNotExist_USER_INFO;
+import static com.sweettracker.account.global.exception.ErrorCode.DoesNotExist_ACCOUNT_INFO;
 
+import com.sweettracker.account.account.application.port.out.DeleteAccountPort;
 import com.sweettracker.account.account.application.port.out.FindAccountPort;
 import com.sweettracker.account.account.application.port.out.RegisterAccountPort;
 import com.sweettracker.account.account.domain.Account;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class AccountPersistenceAdapter implements FindAccountPort, RegisterAccountPort {
+class AccountPersistenceAdapter implements FindAccountPort, RegisterAccountPort, DeleteAccountPort {
 
     private final AccountMapper accountMapper;
     private final AccountRepository accountRepository;
@@ -19,14 +20,14 @@ class AccountPersistenceAdapter implements FindAccountPort, RegisterAccountPort 
     @Override
     public Account findByEmail(String email) {
         AccountEntity entity = accountRepository.findByEmail(email)
-            .orElseThrow(() -> new CustomNotFoundException(DoesNotExist_USER_INFO));
+            .orElseThrow(() -> new CustomNotFoundException(DoesNotExist_ACCOUNT_INFO));
         return accountMapper.toDomain(entity);
     }
 
     @Override
     public Account findByEmailAndPassword(String email, String password) {
         AccountEntity entity = accountRepository.findByEmailAndPassword(email, password)
-            .orElseThrow(() -> new CustomNotFoundException(DoesNotExist_USER_INFO));
+            .orElseThrow(() -> new CustomNotFoundException(DoesNotExist_ACCOUNT_INFO));
         return accountMapper.toDomain(entity);
     }
 
@@ -34,5 +35,12 @@ class AccountPersistenceAdapter implements FindAccountPort, RegisterAccountPort 
     public void register(Account account) {
         AccountEntity entity = accountMapper.toEntity(account);
         accountRepository.save(entity);
+    }
+
+    @Override
+    public void deleteByEmail(String email) {
+        AccountEntity entity = accountRepository.findByEmail(email)
+            .orElseThrow(() -> new CustomNotFoundException(DoesNotExist_ACCOUNT_INFO));
+        accountRepository.delete(entity);
     }
 }

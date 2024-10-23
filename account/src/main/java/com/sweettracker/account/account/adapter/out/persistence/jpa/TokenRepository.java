@@ -7,5 +7,7 @@ interface TokenRepository extends JpaRepository<TokenEntity, Long> {
 
     Optional<TokenEntity> findByEmail(String email);
 
+    Optional<TokenEntity> findByEmailAndUserAgent(String email, String userAgent);
+
     void deleteByEmail(String email);
 }

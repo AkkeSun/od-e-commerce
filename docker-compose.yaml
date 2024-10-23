@@ -1,12 +1,22 @@
 version: "3.1"
 
 services:
-  redis_container:
+  redis_prod:
     image: redis:latest
-    container_name: redis
+    container_name: redis_1
     ports:
-      - 6379:6379
+      - 6389:6379
     labels:
-      - "name=redis"
+      - "name=redis_prod"
+      - "mode=standalone"
+    restart: always
+
+  redis_test:
+    image: redis:latest
+    container_name: redis_2
+    ports:
+      - 6380:6379
+    labels:
+      - "name=redis_test"
       - "mode=standalone"
     restart: always
