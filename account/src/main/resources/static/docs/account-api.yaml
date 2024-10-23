@@ -1,0 +1,291 @@
+openapi: 3.0.1
+info:
+  title: Account API
+  description: 사용자 정보와 토큰을 관리하는 API 입니다
+  version: 0.0.1
+servers:
+- url: http://localhost:8081
+tags: []
+paths:
+  /accounts/info:
+    get:
+      tags:
+      - Account
+      summary: 사용자 정보 조회 API
+      description: 인증토큰으로 사용자 정보를 조회하는 API 입니다.
+      operationId: "[FindAccountInfo] "
+      parameters:
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test-success-token
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[RESPONSE] find-account-info"
+              examples:
+                '[FindAccountInfo] SUCCESS':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "id" : 1,
+                        "email" : "test@google.com",
+                        "username" : "od",
+                        "userTel" : "01012341234",
+                        "address" : "서울특별시 송파구",
+                        "role" : "ROLE_CUSTOMER"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[RESPONSE] ERROR"
+              examples:
+                '[FindAccountInfo] 유효하지 않은 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 3001,
+                        "errorMessage" : "유효한 인증 토큰이 아닙니다"
+                      }
+                    }
+        "404":
+          description: "404"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[RESPONSE] ERROR"
+              examples:
+                '[FindAccountInfo] 조회된 사용자 정보 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 404,
+                      "message" : "NOT_FOUND",
+                      "data" : {
+                        "errorCode" : 2001,
+                        "errorMessage" : "조회된 사용자 정보가 없습니다"
+                      }
+                    }
+  /accounts/token:
+    post:
+      tags:
+      - Account
+      summary: 사용자 토큰 등록 API
+      description: 이메일과 비밀번호로 인증된 사용자의 토큰을 등록하는 API 입니다.
+      operationId: "[registerToken] "
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[REQUEST] register-token"
+            examples:
+              '[registerToken] 비밀번호 미입력':
+                value: |-
+                  {
+                    "email" : "test@gmail.com",
+                    "password" : ""
+                  }
+              '[registerToken] SUCCESS':
+                value: |-
+                  {
+                    "email" : "test@gmail.com",
+                    "password" : "1234"
+                  }
+              '[registerToken] 조회된 사용자 정보 없음':
+                value: |-
+                  {
+                    "email" : "test@gmail.com",
+                    "password" : "1111111"
+                  }
+              '[registerToken] 이메일 미입력':
+                value: |-
+                  {
+                    "email" : "",
+                    "password" : "1234"
+                  }
+      responses:
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[RESPONSE] ERROR"
+              examples:
+                '[registerToken] 비밀번호 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1001,
+                        "errorMessage" : "비밀번호는 필수값 입니다."
+                      }
+                    }
+                '[registerToken] 이메일 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1001,
+                        "errorMessage" : "이메일은 필수값 입니다."
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[RESPONSE] register-token"
+              examples:
+                '[registerToken] SUCCESS':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "accessToken" : "Bearer testAccessToken",
+                        "refreshToken" : "Bearer testRefreshToken"
+                      }
+                    }
+        "404":
+          description: "404"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[RESPONSE] ERROR"
+              examples:
+                '[registerToken] 조회된 사용자 정보 없음':
+                  value: |-
+                    {
+                      "httpStatus" : 404,
+                      "message" : "NOT_FOUND",
+                      "data" : {
+                        "errorCode" : 2001,
+                        "errorMessage" : "조회된 사용자 정보가 없습니다"
+                      }
+                    }
+components:
+  schemas:
+    '[RESPONSE] find-account-info':
+      title: "[RESPONSE] find-account-info"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - address
+          - email
+          - id
+          - role
+          - userTel
+          - username
+          type: object
+          properties:
+            role:
+              type: string
+              description: 사용자 권한
+            address:
+              type: string
+              description: 사용자 주소
+            userTel:
+              type: string
+              description: 사용자 전화번호
+            id:
+              type: number
+              description: 사용자 아이디
+            email:
+              type: string
+              description: 사용자 이메일
+            username:
+              type: string
+              description: 사용자 이름
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
+    '[REQUEST] register-token':
+      title: "[REQUEST] register-token"
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        email:
+          type: string
+          description: 이메일
+    '[RESPONSE] register-token':
+      title: "[RESPONSE] register-token"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - accessToken
+          - refreshToken
+          type: object
+          properties:
+            accessToken:
+              type: string
+              description: 액세스 토큰
+            refreshToken:
+              type: string
+              description: 리프레시 토큰
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지
+    '[RESPONSE] ERROR':
+      title: "[RESPONSE] ERROR"
+      required:
+      - data
+      - httpStatus
+      - message
+      type: object
+      properties:
+        data:
+          required:
+          - errorCode
+          - errorMessage
+          type: object
+          properties:
+            errorMessage:
+              type: string
+              description: 에러 메시지
+            errorCode:
+              type: number
+              description: 에러 코드
+          description: 응답 데이터
+        httpStatus:
+          type: number
+          description: 상태 코드
+        message:
+          type: string
+          description: 상태 메시지

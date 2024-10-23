@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS ACCOUNT
+(
+    TABLE_INDEX  int auto_increment primary key,
+    EMAIL varchar(50)  not null,
+    PASSWORD varchar(100) not null,
+    USER_NAME varchar(50),
+    USER_TEL varchar(50),
+    ADDRESS varchar(100),
+    ROLE varchar(50) not null
+);
+
+CREATE TABLE IF NOT EXISTS TOKEN
+(
+    TABLE_INDEX  INT AUTO_INCREMENT PRIMARY KEY,
+    EMAIL    VARCHAR(50) NOT NULL,
+    USER_AGENT   VARCHAR(500) NOT NULL,
+    REFRESH_TOKEN VARCHAR(200) NOT NULL,
+    REG_DATE_TIME     VARCHAR(50) NOT NULL,
+    UNIQUE KEY (EMAIL, USER_AGENT)
+    );
+
