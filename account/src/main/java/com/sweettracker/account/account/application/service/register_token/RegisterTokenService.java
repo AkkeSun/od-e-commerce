@@ -6,12 +6,11 @@ import com.sweettracker.account.account.application.port.out.FindAccountPort;
 import com.sweettracker.account.account.application.port.out.RegisterTokenCachePort;
 import com.sweettracker.account.account.application.port.out.RegisterTokenPort;
 import com.sweettracker.account.account.domain.Account;
-import com.sweettracker.account.account.domain.TokenCache;
+import com.sweettracker.account.account.domain.Token;
 import com.sweettracker.account.global.util.AesUtil;
+import com.sweettracker.account.global.util.DateUtil;
 import com.sweettracker.account.global.util.JwtUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import com.sweettracker.account.global.util.UserAgentUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +22,11 @@ class RegisterTokenService implements RegisterTokenUseCase {
 
     private final AesUtil aesUtil;
     private final JwtUtil jwtUtil;
-    private final HttpServletRequest request;
+    private final DateUtil dateUtil;
+    private final UserAgentUtil userAgentUtil;
     private final FindAccountPort findAccountPort;
-    private final RegisterTokenPort registerTokenPort;
     private final RegisterTokenCachePort registerTokenCachePort;
+    private final RegisterTokenPort registerTokenPort;
 
     @Override
     public RegisterTokenServiceResponse registerToken(RegisterTokenCommand command) {
@@ -35,12 +35,12 @@ class RegisterTokenService implements RegisterTokenUseCase {
 
         String accessToken = jwtUtil.createAccessToken(account);
         String refreshToken = jwtUtil.createRefreshToken(command.email());
-        TokenCache tokenCache = TokenCache.builder()
+        Token tokenCache = Token.builder()
             .email(account.getEmail())
-            .userAgent(request.getHeader("User-Agent"))
+            .userAgent(userAgentUtil.getUserAgent())
             .refreshToken(refreshToken)
-            .regDateTime(LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss")))
+            .regDateTime(dateUtil.getCurrentDateTime())
+            .role(account.getRole().name())
             .build();
 
         registerTokenPort.registerToken(tokenCache);

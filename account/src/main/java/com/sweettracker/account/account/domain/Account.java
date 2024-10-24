@@ -33,4 +33,15 @@ public class Account {
         this.address = address;
         this.role = role;
     }
+
+    public Account of(Token tokenCache) {
+        return Account.builder()
+            .id(tokenCache.getId())
+            .email(tokenCache.getEmail())
+            .username("")
+            .userTel("")
+            .address("")
+            .role(Role.valueOf(tokenCache.getRole()))
+            .build();
+    }
 }

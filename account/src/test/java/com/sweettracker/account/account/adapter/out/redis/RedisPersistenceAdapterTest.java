@@ -3,7 +3,7 @@ package com.sweettracker.account.account.adapter.out.redis;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.sweettracker.account.IntegrationTestSupport;
-import com.sweettracker.account.account.domain.TokenCache;
+import com.sweettracker.account.account.domain.Token;
 import com.sweettracker.account.global.util.JsonUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,18 +34,19 @@ class RedisPersistenceAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] 토큰이 정상적으로 등록되는지 확인한다.")
         void success() {
             // given
-            TokenCache token = TokenCache.builder()
+            Token token = Token.builder()
                 .email("od@gmail.com")
                 .userAgent("chrome")
                 .refreshToken("test refresh token")
                 .regDateTime("2021-08-01 00:00:00")
+                .role("ROLE_CUSTOMER")
                 .build();
 
             // when
             redisPersistenceAdapter.registerToken(token);
             String key = String.format("%s-%s::token", token.getEmail(), token.getUserAgent());
             String redisData = redisTemplate.opsForValue().get(key);
-            TokenCache result = jsonUtil.parseJson(redisData, TokenCache.class);
+            Token result = jsonUtil.parseJson(redisData, Token.class);
 
             // then
             assertThat(result.getEmail()).isEqualTo(token.getEmail());
@@ -59,7 +60,7 @@ class RedisPersistenceAdapterTest extends IntegrationTestSupport {
         @DisplayName("[error] 토큰 저장중 오류가 발생할 경우 서킷브레이커가 오픈된다.")
         void error() {
             // given
-            TokenCache token = null;
+            Token token = null;
 
             // when
             redisPersistenceAdapter.registerToken(token);

@@ -2,7 +2,7 @@ package com.sweettracker.account.account.adapter.out.persistence.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.sweettracker.account.account.domain.TokenCache;
+import com.sweettracker.account.account.domain.Token;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class TokenMapperTest {
                 .build();
 
             // when
-            TokenCache domain = mapper.toDomain(entity);
+            Token domain = mapper.toDomain(entity);
 
             // then
             assertThat(domain.getId()).isEqualTo(entity.getId());
@@ -45,7 +45,7 @@ class TokenMapperTest {
         @DisplayName("[SUCCESS] domain 이 entity 로 잘 변환되는지 확인한다.")
         void toDomain_success() {
             // given
-            TokenCache domain = TokenCache.builder()
+            Token domain = Token.builder()
                 .id(10L)
                 .email("testEmail")
                 .userAgent("testUserAgent")

@@ -3,7 +3,7 @@ package com.sweettracker.account.account.adapter.out.persistence.jpa;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.sweettracker.account.IntegrationTestSupport;
-import com.sweettracker.account.account.domain.TokenCache;
+import com.sweettracker.account.account.domain.Token;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,16 +22,17 @@ class TokenPersistenceAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] 조회된 토큰이 있다면 토큰 정보를 응답하는지 확인한다.")
         void success1() {
             // given
-            TokenCache token = TokenCache.builder()
+            Token token = Token.builder()
                 .email("findByEmailAndUserAgent.success1")
                 .userAgent("findByEmailAndUserAgent.success1")
                 .refreshToken("findByEmailAndUserAgent.success1")
                 .regDateTime("findByEmailAndUserAgent.success1")
+                .role("ROLE_CUSTOMER")
                 .build();
             tokenPersistenceAdapter.registerToken(token);
 
             // when
-            TokenCache result = tokenPersistenceAdapter
+            Token result = tokenPersistenceAdapter
                 .findByEmailAndUserAgent(token.getEmail(), token.getUserAgent());
 
             // then
@@ -46,7 +47,7 @@ class TokenPersistenceAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] 조회된 토큰이 없다면 null 을 응답한다.")
         void success2() {
             // when
-            TokenCache result = tokenPersistenceAdapter
+            Token result = tokenPersistenceAdapter
                 .findByEmailAndUserAgent("unKnown", "unKnown");
 
             // then
@@ -62,18 +63,19 @@ class TokenPersistenceAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] 저장된 토큰이 없다면 새로운 토큰을 등록하는지 확인한다")
         void success1() {
             // given
-            TokenCache token = TokenCache.builder()
+            Token token = Token.builder()
                 .email("registerToken.success1")
                 .userAgent("registerToken.success1")
                 .refreshToken("registerToken.success1")
                 .regDateTime("registerToken.success1")
+                .role("ROLE_CUSTOMER")
                 .build();
-            TokenCache token1 = tokenPersistenceAdapter
+            Token token1 = tokenPersistenceAdapter
                 .findByEmailAndUserAgent(token.getEmail(), token.getUserAgent());
 
             // when
             tokenPersistenceAdapter.registerToken(token);
-            TokenCache token2 = tokenPersistenceAdapter
+            Token token2 = tokenPersistenceAdapter
                 .findByEmailAndUserAgent(token.getEmail(), token.getUserAgent());
 
             // then
@@ -89,14 +91,15 @@ class TokenPersistenceAdapterTest extends IntegrationTestSupport {
         @DisplayName("[success] 저장된 토큰이 있다면 토큰 정보를 업데이트하는지 확인한다")
         void success2() {
             // given
-            TokenCache token1Domain = TokenCache.builder()
+            Token token1Domain = Token.builder()
                 .email("registerToken.success2")
                 .userAgent("registerToken.success2")
                 .refreshToken("registerToken.success2")
                 .regDateTime("registerToken.success2")
+                .role("ROLE_CUSTOMER")
                 .build();
             tokenPersistenceAdapter.registerToken(token1Domain);
-            TokenCache token1Domain2 = TokenCache.builder()
+            Token token1Domain2 = Token.builder()
                 .email("registerToken.success2")
                 .userAgent("registerToken.success2.changed")
                 .refreshToken("registerToken.success2.changed")
@@ -105,9 +108,9 @@ class TokenPersistenceAdapterTest extends IntegrationTestSupport {
 
             // when
             tokenPersistenceAdapter.registerToken(token1Domain2);
-            TokenCache token1 = tokenPersistenceAdapter
+            Token token1 = tokenPersistenceAdapter
                 .findByEmailAndUserAgent(token1Domain.getEmail(), token1Domain.getUserAgent());
-            TokenCache token2 = tokenPersistenceAdapter
+            Token token2 = tokenPersistenceAdapter
                 .findByEmailAndUserAgent(token1Domain2.getEmail(), token1Domain2.getUserAgent());
 
             // then

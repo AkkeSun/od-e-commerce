@@ -1,28 +1,30 @@
 package com.sweettracker.account.account.adapter.out.persistence.jpa;
 
-import com.sweettracker.account.account.domain.TokenCache;
+import com.sweettracker.account.account.domain.Token;
 import org.springframework.stereotype.Component;
 
 @Component
 class TokenMapper {
 
-    public TokenCache toDomain(TokenEntity entity) {
-        return TokenCache.builder()
+    public Token toDomain(TokenEntity entity) {
+        return Token.builder()
             .id(entity.getId())
             .email(entity.getEmail())
             .userAgent(entity.getUserAgent())
             .refreshToken(entity.getRefreshToken())
+            .role(entity.getRole())
             .regDateTime(entity.getRegDateTime())
             .build();
     }
 
-    public TokenEntity toEntity(TokenCache domain) {
+    public TokenEntity toEntity(Token domain) {
         return TokenEntity.builder()
             .id(domain.getId())
             .email(domain.getEmail())
             .userAgent(domain.getUserAgent())
             .refreshToken(domain.getRefreshToken())
             .regDateTime(domain.getRegDateTime())
+            .role(domain.getRole())
             .build();
     }
 }

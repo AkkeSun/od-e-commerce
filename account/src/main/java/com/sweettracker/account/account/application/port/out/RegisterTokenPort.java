@@ -1,8 +1,8 @@
 package com.sweettracker.account.account.application.port.out;
 
-import com.sweettracker.account.account.domain.TokenCache;
+import com.sweettracker.account.account.domain.Token;
 
 public interface RegisterTokenPort {
 
-    void registerToken(TokenCache token);
+    void registerToken(Token token);
 }
