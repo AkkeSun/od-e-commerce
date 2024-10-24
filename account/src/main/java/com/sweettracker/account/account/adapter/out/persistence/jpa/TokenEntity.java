@@ -1,6 +1,6 @@
 package com.sweettracker.account.account.adapter.out.persistence.jpa;
 
-import com.sweettracker.account.account.domain.TokenCache;
+import com.sweettracker.account.account.domain.Token;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,17 +34,21 @@ class TokenEntity {
     @Column(name = "REG_DATE_TIME")
     private String regDateTime;
 
+    @Column(name = "ROLE")
+    private String role;
+
     @Builder
-    TokenEntity(Long id, String email, String userAgent, String refreshToken,
-        String regDateTime) {
+    public TokenEntity(Long id, String email, String userAgent, String refreshToken,
+        String regDateTime, String role) {
         this.id = id;
         this.email = email;
         this.userAgent = userAgent;
         this.refreshToken = refreshToken;
         this.regDateTime = regDateTime;
+        this.role = role;
     }
 
-    void updateByDomain(TokenCache tokenCache) {
+    void updateByDomain(Token tokenCache) {
         this.refreshToken = tokenCache.getRefreshToken();
         this.regDateTime = tokenCache.getRegDateTime();
         this.userAgent = tokenCache.getUserAgent();
