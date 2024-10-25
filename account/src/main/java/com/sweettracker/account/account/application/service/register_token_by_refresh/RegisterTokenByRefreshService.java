@@ -13,19 +13,21 @@ import com.sweettracker.account.global.util.DateUtil;
 import com.sweettracker.account.global.util.JwtUtil;
 import com.sweettracker.account.global.util.UserAgentUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 class RegisterTokenByRefreshService implements RegisterTokenByRefreshUseCase {
-    
+
     private final JwtUtil jwtUtil;
     private final DateUtil dateUtil;
     private final UserAgentUtil userAgentUtil;
-    private final FindTokenCachePort findRedisCachePort;
+    private final FindTokenCachePort findTokenCachePort;
     private final FindTokenPort findTokenPort;
     private final UpdateTokenPort updateTokenPort;
     private final RegisterTokenCachePort registerTokenCachePort;
@@ -38,12 +40,14 @@ class RegisterTokenByRefreshService implements RegisterTokenByRefreshUseCase {
 
         String email = jwtUtil.getEmail(refreshToken);
         String userAgent = userAgentUtil.getUserAgent();
-        Token savedToken = findRedisCachePort.findByEmailAndUserAgent(email, userAgent);
+        Token savedToken = findTokenCachePort.findByEmailAndUserAgent(email, userAgent);
 
         if (ObjectUtils.isEmpty(savedToken)) {
+            log.info("[Token cache notfound] {} - {}", email, userAgent);
             savedToken = findTokenPort.findByEmailAndUserAgent(email, userAgent);
         }
         if (ObjectUtils.isEmpty(savedToken) || savedToken.isDifferentRefreshToken(refreshToken)) {
+            log.info("[Invalid token] {} - {}", email, userAgent);
             throw new CustomAuthenticationException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
