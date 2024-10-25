@@ -1,6 +1,7 @@
 package com.sweettracker.account.global.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sweettracker.account.global.aop.ExceptionHandlerLog;
 import com.sweettracker.account.global.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
@@ -55,6 +56,22 @@ public class ExceptionAdvice {
         );
     }
 
+    @ExceptionHandlerLog
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(CustomValidationException.class)
+    ApiResponse<Object> customValidationException(CustomValidationException e,
+        HttpServletRequest request) {
+        log.info("[{} {}] request - {}", request.getMethod(), request.getRequestURI(),
+            getRequestData(request));
+        return ApiResponse.of(
+            HttpStatus.BAD_REQUEST,
+            ErrorResponse.builder()
+                .errorCode(1001)
+                .errorMessage(e.getErrorMessage())
+                .build()
+        );
+    }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(CustomNotFoundException.class)
     ApiResponse<Object> notFoundException(CustomNotFoundException e) {
@@ -72,6 +89,19 @@ public class ExceptionAdvice {
     ApiResponse<Object> customAuthenticationException(CustomAuthenticationException e) {
         return ApiResponse.of(
             HttpStatus.UNAUTHORIZED,
+            ErrorResponse.builder()
+                .errorCode(e.getErrorCode().getCode())
+                .errorMessage(e.getErrorCode().getMessage())
+                .build()
+        );
+    }
+
+    @ExceptionHandlerLog
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(CustomBusinessException.class)
+    ApiResponse<Object> notFoundException(CustomBusinessException e) {
+        return ApiResponse.of(
+            HttpStatus.UNPROCESSABLE_ENTITY,
             ErrorResponse.builder()
                 .errorCode(e.getErrorCode().getCode())
                 .errorMessage(e.getErrorCode().getMessage())

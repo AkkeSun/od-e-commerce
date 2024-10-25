@@ -32,6 +32,11 @@ class AccountPersistenceAdapter implements FindAccountPort, RegisterAccountPort,
     }
 
     @Override
+    public boolean existsByEmail(String email) {
+        return accountRepository.existsByEmail(email);
+    }
+
+    @Override
     public void register(Account account) {
         AccountEntity entity = accountMapper.toEntity(account);
         accountRepository.save(entity);
