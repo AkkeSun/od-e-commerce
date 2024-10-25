@@ -15,6 +15,7 @@ import com.sweettracker.account.global.util.AesUtil;
 import com.sweettracker.account.global.util.DateUtil;
 import com.sweettracker.account.global.util.JwtUtil;
 import com.sweettracker.account.global.util.UserAgentUtil;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,8 @@ class RegisterAccountService implements RegisterAccountUseCase {
 
     private final AesUtil aesUtil;
     private final JwtUtil jwtUtil;
-    private final UserAgentUtil userAgentUtil;
     private final DateUtil dateUtil;
+    private final UserAgentUtil userAgentUtil;
     private final FindAccountPort findAccountPort;
     private final RegisterAccountPort registerAccountPort;
     private final RegisterTokenPort registerTokenPort;
@@ -48,6 +49,8 @@ class RegisterAccountService implements RegisterAccountUseCase {
             .userTel(command.userTel())
             .address(command.address())
             .role(Role.valueOf(command.role()))
+            .regDateTime(LocalDateTime.now())
+            .regDate(dateUtil.getCurrentDate())
             .build();
         registerAccountPort.register(account);
 

@@ -13,4 +13,10 @@ public class DateUtilImpl implements DateUtil {
         return LocalDateTime.now()
             .format(DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss", Locale.KOREA));
     }
+
+    @Override
+    public String getCurrentDate() {
+        return LocalDateTime.now()
+            .format(DateTimeFormatter.ofPattern("yyyyMMdd", Locale.KOREA));
+    }
 }

@@ -15,6 +15,8 @@ class AccountMapper {
             .userTel(entity.getUserTel())
             .address(entity.getAddress())
             .role(entity.getRole())
+            .regDateTime(entity.getRegDateTime())
+            .regDate(entity.getRegDate())
             .build();
     }
 
@@ -27,7 +29,8 @@ class AccountMapper {
             .userTel(domain.getUserTel())
             .address(domain.getAddress())
             .role(domain.getRole())
+            .regDateTime(domain.getRegDateTime())
+            .regDate(domain.getRegDate())
             .build();
     }
-
 }

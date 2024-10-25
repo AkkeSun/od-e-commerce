@@ -1,5 +1,6 @@
 package com.sweettracker.account.account.domain;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +23,13 @@ public class Account {
 
     private Role role;
 
+    private LocalDateTime regDateTime;
+
+    private String regDate;
+
     @Builder
     public Account(Long id, String email, String password, String username, String userTel,
-        String address, Role role) {
+        String address, Role role, LocalDateTime regDateTime, String regDate) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -32,6 +37,8 @@ public class Account {
         this.userTel = userTel;
         this.address = address;
         this.role = role;
+        this.regDateTime = regDateTime;
+        this.regDate = regDate;
     }
 
     public Account of(Token tokenCache) {
@@ -43,5 +50,21 @@ public class Account {
             .address("")
             .role(Role.valueOf(tokenCache.getRole()))
             .build();
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    public void updateUsername(String username) {
+        this.username = username;
+    }
+
+    public void updateUserTel(String userTel) {
+        this.userTel = userTel;
+    }
+
+    public void updateAddress(String address) {
+        this.address = address;
     }
 }

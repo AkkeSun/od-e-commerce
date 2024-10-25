@@ -6,7 +6,9 @@ import com.sweettracker.account.account.domain.Account;
 import com.sweettracker.account.account.domain.Role;
 import com.sweettracker.account.global.exception.CustomNotFoundException;
 import com.sweettracker.account.global.util.AesUtil;
+import com.sweettracker.account.global.util.DateUtil;
 import jakarta.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,7 @@ public class InitConfig {
     private final FindAccountPort findAccountPort;
     private final RegisterAccountPort registerAccountPort;
     private final AesUtil aesUtil;
+    private final DateUtil dateUtil;
 
     @PostConstruct
     public void init() {
@@ -26,6 +29,8 @@ public class InitConfig {
             .address("서울특별시 송파구")
             .userTel("01012341234")
             .password(aesUtil.encryptText("1234"))
+            .regDate(dateUtil.getCurrentDate())
+            .regDateTime(LocalDateTime.now())
             .role(Role.ROLE_CUSTOMER)
             .build();
 

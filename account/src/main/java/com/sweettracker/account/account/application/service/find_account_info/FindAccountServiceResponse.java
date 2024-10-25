@@ -9,6 +9,7 @@ public record FindAccountServiceResponse(
     String username,
     String userTel,
     String address,
+    String regDate,
     String role
 ) {
 

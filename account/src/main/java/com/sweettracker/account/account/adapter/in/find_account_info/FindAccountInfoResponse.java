@@ -17,17 +17,18 @@ class FindAccountInfoResponse {
     private String userTel;
     private String address;
     private String role;
+    private String regDate;
 
     @Builder
     public FindAccountInfoResponse(Long id, String email, String username, String userTel,
-        String address,
-        String role) {
+        String address, String role, String regDate) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.userTel = userTel;
         this.address = address;
         this.role = role;
+        this.regDate = regDate;
     }
 
     FindAccountInfoResponse of(FindAccountServiceResponse serviceResponse) {
@@ -37,6 +38,7 @@ class FindAccountInfoResponse {
             .username(serviceResponse.username())
             .userTel(serviceResponse.userTel())
             .address(serviceResponse.address())
+            .regDate(serviceResponse.regDate())
             .role(serviceResponse.role())
             .build();
     }

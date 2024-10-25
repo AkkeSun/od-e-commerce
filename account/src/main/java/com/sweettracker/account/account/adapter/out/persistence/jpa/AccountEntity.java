@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,9 +44,15 @@ class AccountEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "REG_DATE_TIME")
+    private LocalDateTime regDateTime;
+
+    @Column(name = "REG_DATE")
+    private String regDate;
+
     @Builder
     AccountEntity(Long id, String email, String password, String username, String userTel,
-        String address, Role role) {
+        String address, Role role, LocalDateTime regDateTime, String regDate) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -53,5 +60,7 @@ class AccountEntity {
         this.userTel = userTel;
         this.address = address;
         this.role = role;
+        this.regDateTime = regDateTime;
+        this.regDate = regDate;
     }
 }

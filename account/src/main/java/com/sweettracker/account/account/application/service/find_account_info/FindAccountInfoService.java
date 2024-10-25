@@ -26,6 +26,7 @@ class FindAccountInfoService implements FindAccountInfoUseCase {
             .userTel(account.getUserTel())
             .address(account.getAddress())
             .role(account.getRole().toString())
+            .regDate(account.getRegDate())
             .build();
     }
 }

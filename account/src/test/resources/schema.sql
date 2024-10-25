@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS ACCOUNT
     USER_NAME varchar(50),
     USER_TEL varchar(50),
     ADDRESS varchar(100),
+    REG_DATE varchar(8) NOT NULL,
+    REG_DATE_TIME timestamp NOT NULL,
     ROLE varchar(50) not null
 );
 CREATE INDEX IF NOT EXISTS ACCOUNT_IDX_1 ON ACCOUNT (EMAIL);
