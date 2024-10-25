@@ -122,4 +122,41 @@ class TokenPersistenceAdapterTest extends IntegrationTestSupport {
             tokenPersistenceAdapter.deleteByEmail(token1Domain2.getEmail());
         }
     }
+
+    @Nested
+    @DisplayName("[updateToken] 토큰을 수정하는 메소드")
+    class Describe_updateToken {
+
+        @Test
+        @DisplayName("[success] 토큰 정보가 정상적으로 수정되는지 확인한다.")
+        void success2() {
+            // given
+            Token token1Domain = Token.builder()
+                .email("updateToken.success.email")
+                .userAgent("updateToken.success.userAgent")
+                .refreshToken("updateToken.success.refreshToken")
+                .regDateTime("updateToken.success.regDateTime")
+                .role("ROLE_CUSTOMER")
+                .build();
+            tokenPersistenceAdapter.registerToken(token1Domain);
+            Token token1Domain2 = Token.builder()
+                .email("updateToken.success.email")
+                .userAgent("updateToken.success.userAgent")
+                .refreshToken("updateRefreshToken")
+                .regDateTime("updateRegDateTime")
+                .build();
+
+            // when
+            tokenPersistenceAdapter.updateToken(token1Domain2);
+            Token savedToken = tokenPersistenceAdapter
+                .findByEmailAndUserAgent(token1Domain.getEmail(), token1Domain.getUserAgent());
+
+            // then
+            assertThat(savedToken.getEmail()).isEqualTo(token1Domain2.getEmail());
+            assertThat(savedToken.getUserAgent()).isEqualTo(token1Domain2.getUserAgent());
+            assertThat(savedToken.getRefreshToken()).isEqualTo(token1Domain2.getRefreshToken());
+            assertThat(savedToken.getRegDateTime()).isEqualTo(token1Domain2.getRegDateTime());
+            tokenPersistenceAdapter.deleteByEmail(token1Domain2.getEmail());
+        }
+    }
 }

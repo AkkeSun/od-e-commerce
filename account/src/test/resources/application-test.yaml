@@ -10,3 +10,7 @@ spring:
       host: 127.0.0.1
       port: 6380
       timeout: 3000
+
+jwt:
+  token:
+    refresh-valid-time: 10000
