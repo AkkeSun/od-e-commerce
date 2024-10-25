@@ -57,6 +57,7 @@ class FindAccountInfoDocsTest extends RestDocsSupport {
                 .address("서울특별시 송파구")
                 .email("test@google.com")
                 .role("ROLE_CUSTOMER")
+                .regDate("20241212")
                 .build();
             given(findAccountInfoUseCase.findAccountInfo(authorization)).willReturn(response);
 
@@ -95,8 +96,9 @@ class FindAccountInfoDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.email").type(JsonFieldType.STRING)
                                     .description("사용자 이메일"),
                                 fieldWithPath("data.role").type(JsonFieldType.STRING)
-                                    .description("사용자 권한")
-
+                                    .description("사용자 권한"),
+                                fieldWithPath("data.regDate").type(JsonFieldType.STRING)
+                                    .description("등록일")
                             )
                             .responseSchema(Schema.schema("[RESPONSE] find-account-info"))
                             .build()

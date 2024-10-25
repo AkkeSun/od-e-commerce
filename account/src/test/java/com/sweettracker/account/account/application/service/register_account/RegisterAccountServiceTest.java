@@ -16,6 +16,7 @@ import com.sweettracker.account.account.domain.Account;
 import com.sweettracker.account.account.domain.Token;
 import com.sweettracker.account.global.exception.CustomBusinessException;
 import com.sweettracker.account.global.exception.ErrorCode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,11 @@ class RegisterAccountServiceTest extends IntegrationTestSupport {
     @Autowired
     DeleteTokenPort deleteTokenPort;
 
+    @BeforeEach
+    void setup() {
+        circuitBreakerRegistry.circuitBreaker("redis").reset();
+    }
+    
     @Nested
     @DisplayName("[registerAccount] 사용자 정보를 등록하는 메소드")
     class registerAccount {
@@ -50,7 +56,7 @@ class RegisterAccountServiceTest extends IntegrationTestSupport {
         void success() {
             // given
             RegisterAccountCommand command = RegisterAccountCommand.builder()
-                .email("registerAccount.success")
+                .email("aaa.success")
                 .address("registerAccount.success")
                 .password("registerAccount.success")
                 .userTel("01012341234")

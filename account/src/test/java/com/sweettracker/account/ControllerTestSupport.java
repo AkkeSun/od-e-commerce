@@ -5,6 +5,7 @@ import com.sweettracker.account.account.application.port.in.FindAccountInfoUseCa
 import com.sweettracker.account.account.application.port.in.RegisterAccountUseCase;
 import com.sweettracker.account.account.application.port.in.RegisterTokenByRefreshUseCase;
 import com.sweettracker.account.account.application.port.in.RegisterTokenUseCase;
+import com.sweettracker.account.account.application.port.in.UpdateAccountUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,4 +31,8 @@ public class ControllerTestSupport {
 
     @MockBean
     protected RegisterAccountUseCase registerAccountUseCase;
+
+    @MockBean
+    protected UpdateAccountUseCase updateAccountUseCase;
+    
 }

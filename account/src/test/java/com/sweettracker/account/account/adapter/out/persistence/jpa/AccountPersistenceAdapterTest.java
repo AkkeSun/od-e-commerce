@@ -8,6 +8,8 @@ import com.sweettracker.account.IntegrationTestSupport;
 import com.sweettracker.account.account.domain.Account;
 import com.sweettracker.account.account.domain.Role;
 import com.sweettracker.account.global.exception.CustomNotFoundException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,8 @@ class AccountPersistenceAdapterTest extends IntegrationTestSupport {
                 .password("findByEmail.success")
                 .userTel("findByEmail.success")
                 .role(Role.ROLE_CUSTOMER)
+                .regDateTime(LocalDateTime.now())
+                .regDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                 .build();
             accountPersistenceAdapter.register(account);
 
@@ -80,6 +84,8 @@ class AccountPersistenceAdapterTest extends IntegrationTestSupport {
                 .address("findByEmailAndPassword.success")
                 .userTel("findByEmailAndPassword.success")
                 .role(Role.ROLE_CUSTOMER)
+                .regDateTime(LocalDateTime.now())
+                .regDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                 .build();
             accountPersistenceAdapter.register(account);
 
@@ -127,6 +133,8 @@ class AccountPersistenceAdapterTest extends IntegrationTestSupport {
                 .address("register.success")
                 .userTel("register.success")
                 .role(Role.ROLE_CUSTOMER)
+                .regDateTime(LocalDateTime.now())
+                .regDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                 .build();
 
             // when
@@ -159,6 +167,8 @@ class AccountPersistenceAdapterTest extends IntegrationTestSupport {
                 .address("deleteByEmail.success")
                 .userTel("deleteByEmail.success")
                 .role(Role.ROLE_CUSTOMER)
+                .regDateTime(LocalDateTime.now())
+                .regDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                 .build();
             accountPersistenceAdapter.register(account);
             Account result = accountPersistenceAdapter.findByEmail(email);
@@ -189,6 +199,8 @@ class AccountPersistenceAdapterTest extends IntegrationTestSupport {
                 .address("existsByEmail.success")
                 .userTel("existsByEmail.success")
                 .role(Role.ROLE_CUSTOMER)
+                .regDateTime(LocalDateTime.now())
+                .regDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                 .build();
             accountPersistenceAdapter.register(account);
 
