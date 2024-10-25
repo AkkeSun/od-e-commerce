@@ -35,7 +35,8 @@ class UpdateAccountRequest {
     }
 
     void validation() {
-        if (!password.equals(passwordCheck)) {
+        if (StringUtils.hasText(password) && StringUtils.hasText(passwordCheck) &&
+            !password.equals(passwordCheck)) {
             throw new CustomValidationException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
         if (StringUtils.hasText(userTel) &&

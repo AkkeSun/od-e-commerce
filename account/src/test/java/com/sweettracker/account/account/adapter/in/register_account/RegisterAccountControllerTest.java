@@ -355,12 +355,6 @@ class RegisterAccountControllerTest extends ControllerTestSupport {
                 .userTel("01012345678")
                 .address("서울시 강남구")
                 .build();
-            RegisterAccountServiceResponse response = RegisterAccountServiceResponse.builder()
-                .accessToken("accessToken")
-                .refreshToken("refreshToken")
-                .build();
-            given(registerAccountUseCase.registerAccount(request.toCommand()))
-                .willReturn(response);
 
             // when
             ResultActions actions = mockMvc.perform(post("/accounts")
@@ -391,13 +385,7 @@ class RegisterAccountControllerTest extends ControllerTestSupport {
                 .userTel("01012345678")
                 .address("서울시 강남구")
                 .build();
-            RegisterAccountServiceResponse response = RegisterAccountServiceResponse.builder()
-                .accessToken("accessToken")
-                .refreshToken("refreshToken")
-                .build();
-            given(registerAccountUseCase.registerAccount(request.toCommand()))
-                .willReturn(response);
-
+            
             // when
             ResultActions actions = mockMvc.perform(post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
