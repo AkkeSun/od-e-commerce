@@ -5,6 +5,7 @@ import static com.sweettracker.account.global.exception.ErrorCode.DoesNotExist_A
 import com.sweettracker.account.account.application.port.out.DeleteAccountPort;
 import com.sweettracker.account.account.application.port.out.FindAccountPort;
 import com.sweettracker.account.account.application.port.out.RegisterAccountPort;
+import com.sweettracker.account.account.application.port.out.UpdateAccountPort;
 import com.sweettracker.account.account.domain.Account;
 import com.sweettracker.account.global.exception.CustomNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class AccountPersistenceAdapter implements FindAccountPort, RegisterAccountPort, DeleteAccountPort {
+class AccountPersistenceAdapter implements FindAccountPort, RegisterAccountPort, DeleteAccountPort,
+    UpdateAccountPort {
 
     private final AccountMapper accountMapper;
     private final AccountRepository accountRepository;
@@ -47,5 +49,10 @@ class AccountPersistenceAdapter implements FindAccountPort, RegisterAccountPort,
         AccountEntity entity = accountRepository.findByEmail(email)
             .orElseThrow(() -> new CustomNotFoundException(DoesNotExist_ACCOUNT_INFO));
         accountRepository.delete(entity);
+    }
+
+    @Override
+    public void update(Account account) {
+        accountRepository.update(accountMapper.toEntity(account));
     }
 }
