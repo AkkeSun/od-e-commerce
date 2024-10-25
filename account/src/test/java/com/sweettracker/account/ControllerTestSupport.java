@@ -2,6 +2,7 @@ package com.sweettracker.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sweettracker.account.account.application.port.in.FindAccountInfoUseCase;
+import com.sweettracker.account.account.application.port.in.RegisterAccountUseCase;
 import com.sweettracker.account.account.application.port.in.RegisterTokenByRefreshUseCase;
 import com.sweettracker.account.account.application.port.in.RegisterTokenUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,4 +27,7 @@ public class ControllerTestSupport {
 
     @MockBean
     protected RegisterTokenByRefreshUseCase registerTokenByRefreshUseCase;
+
+    @MockBean
+    protected RegisterAccountUseCase registerAccountUseCase;
 }

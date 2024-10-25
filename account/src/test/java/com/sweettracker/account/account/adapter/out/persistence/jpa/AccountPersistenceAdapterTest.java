@@ -173,4 +173,44 @@ class AccountPersistenceAdapterTest extends IntegrationTestSupport {
             assertThat(exception.getErrorCode()).isEqualTo(DoesNotExist_ACCOUNT_INFO);
         }
     }
+
+    @Nested
+    @DisplayName("[existsByEmail] 저장된 사용자 정보가 있는지 조회하는 메소드")
+    class Describe_existsByEmail {
+
+        @Test
+        @DisplayName("[success] 조회된 정보가 있다면 true 를 응답한다.")
+        void success() {
+            // given
+            String email = "existsByEmail.success";
+            Account account = Account.builder()
+                .email(email)
+                .password("existsByEmail.success")
+                .address("existsByEmail.success")
+                .userTel("existsByEmail.success")
+                .role(Role.ROLE_CUSTOMER)
+                .build();
+            accountPersistenceAdapter.register(account);
+
+            // when
+            boolean result = accountPersistenceAdapter.existsByEmail(email);
+
+            // then
+            assertThat(result).isTrue();
+            accountPersistenceAdapter.deleteByEmail(email);
+        }
+
+        @Test
+        @DisplayName("[success] 조회된 정보가 앖디먄 false 를 응답한다.")
+        void success2() {
+            // given
+            String email = "existsByEmail.success2";
+
+            // when
+            boolean result = accountPersistenceAdapter.existsByEmail(email);
+
+            // then
+            assertThat(result).isFalse();
+        }
+    }
 }
