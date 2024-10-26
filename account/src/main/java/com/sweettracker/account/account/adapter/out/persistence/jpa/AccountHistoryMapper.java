@@ -16,6 +16,17 @@ class AccountHistoryMapper {
             .regDate(domain.getRegDate())
             .regDateTime(domain.getRegDateTime())
             .build();
+    }
 
+    public AccountHistory toDomain(AccountHistoryEntity entity) {
+        return AccountHistory.builder()
+            .id(entity.getId())
+            .accountId(entity.getAccountId())
+            .email(entity.getEmail())
+            .type(entity.getType())
+            .detailInfo(entity.getDetailInfo())
+            .regDate(entity.getRegDate())
+            .regDateTime(entity.getRegDateTime())
+            .build();
     }
 }

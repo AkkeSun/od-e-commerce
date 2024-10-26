@@ -10,6 +10,7 @@ import com.sweettracker.account.account.domain.Account;
 import com.sweettracker.account.global.exception.CustomNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -52,6 +53,7 @@ class AccountPersistenceAdapter implements FindAccountPort, RegisterAccountPort,
     }
 
     @Override
+    @Transactional // for test
     public void update(Account account) {
         accountRepository.update(accountMapper.toEntity(account));
     }
