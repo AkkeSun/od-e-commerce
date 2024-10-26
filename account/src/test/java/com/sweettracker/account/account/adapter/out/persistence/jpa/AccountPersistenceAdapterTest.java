@@ -225,4 +225,47 @@ class AccountPersistenceAdapterTest extends IntegrationTestSupport {
             assertThat(result).isFalse();
         }
     }
+
+    @Nested
+    @DisplayName("[update] 사용자 정보를 수정하는 메소드")
+    class Describe_update {
+
+        @Test
+        @DisplayName("[success] 사용자 정보가 정상적으로 수정되는지 확인한다.")
+        void success() {
+            // given
+            Account account = Account.builder()
+                .email("update.success")
+                .username("update.success")
+                .password("update.success")
+                .address("update.success")
+                .userTel("update.success")
+                .role(Role.ROLE_CUSTOMER)
+                .regDateTime(LocalDateTime.now())
+                .regDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                .build();
+            accountPersistenceAdapter.register(account);
+            Account savedAccount = accountPersistenceAdapter.findByEmail(account.getEmail());
+            Account account2 = Account.builder()
+                .id(savedAccount.getId())
+                .email(savedAccount.getEmail())
+                .username("update.success2")
+                .password("update.success2")
+                .address("update.success2")
+                .userTel("update.success2")
+                .role(Role.ROLE_CUSTOMER)
+                .build();
+
+            // when
+            accountPersistenceAdapter.update(account2);
+            Account result = accountPersistenceAdapter.findByEmail(account.getEmail());
+
+            // then
+            assertThat(result.getEmail()).isEqualTo(account2.getEmail());
+            assertThat(result.getPassword()).isEqualTo(account2.getPassword());
+            assertThat(result.getAddress()).isEqualTo(account2.getAddress());
+            assertThat(result.getUserTel()).isEqualTo(account2.getUserTel());
+            accountPersistenceAdapter.deleteByEmail(account.getEmail());
+        }
+    }
 }
