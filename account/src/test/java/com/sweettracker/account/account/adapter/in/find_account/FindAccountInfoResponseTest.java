@@ -1,8 +1,8 @@
-package com.sweettracker.account.account.adapter.in.find_account_info;
+package com.sweettracker.account.account.adapter.in.find_account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.sweettracker.account.account.application.service.find_account_info.FindAccountServiceResponse;
+import com.sweettracker.account.account.application.service.find_account.FindAccountServiceResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class FindAccountInfoResponseTest {
                 .build();
 
             // when
-            FindAccountInfoResponse response = new FindAccountInfoResponse().of(serviceResponse);
+            FindAccountResponse response = new FindAccountResponse().of(serviceResponse);
 
             // then
             assertThat(response.getId()).isEqualTo(serviceResponse.id());

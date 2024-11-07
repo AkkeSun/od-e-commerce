@@ -1,4 +1,4 @@
-package com.sweettracker.account.account.application.service.find_account_info;
+package com.sweettracker.account.account.application.service.find_account;
 
 import com.sweettracker.account.account.application.port.in.FindAccountInfoUseCase;
 import com.sweettracker.account.account.application.port.out.FindAccountPort;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-class FindAccountInfoService implements FindAccountInfoUseCase {
+class FindAccountService implements FindAccountInfoUseCase {
 
     private final JwtUtil jwtUtil;
     private final FindAccountPort findAccountPort;

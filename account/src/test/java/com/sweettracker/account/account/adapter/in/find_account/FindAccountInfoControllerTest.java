@@ -1,4 +1,4 @@
-package com.sweettracker.account.account.adapter.in.find_account_info;
+package com.sweettracker.account.account.adapter.in.find_account;
 
 import static com.sweettracker.account.global.exception.ErrorCode.INVALID_ACCESS_TOKEN;
 import static org.mockito.ArgumentMatchers.any;
@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sweettracker.account.ControllerTestSupport;
-import com.sweettracker.account.account.application.service.find_account_info.FindAccountServiceResponse;
+import com.sweettracker.account.account.application.service.find_account.FindAccountServiceResponse;
 import com.sweettracker.account.global.exception.ErrorResponse;
 import com.sweettracker.account.global.response.ApiResponse;
 import org.junit.jupiter.api.DisplayName;

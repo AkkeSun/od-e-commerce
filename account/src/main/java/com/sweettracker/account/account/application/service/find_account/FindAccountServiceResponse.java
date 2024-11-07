@@ -1,4 +1,4 @@
-package com.sweettracker.account.account.application.service.find_account_info;
+package com.sweettracker.account.account.application.service.find_account;
 
 import lombok.Builder;
 

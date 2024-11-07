@@ -1,4 +1,4 @@
-package com.sweettracker.account.account.adapter.in.find_account_info;
+package com.sweettracker.account.account.adapter.in.find_account;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
@@ -17,7 +17,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.sweettracker.account.RestDocsSupport;
 import com.sweettracker.account.account.application.port.in.FindAccountInfoUseCase;
-import com.sweettracker.account.account.application.service.find_account_info.FindAccountServiceResponse;
+import com.sweettracker.account.account.application.service.find_account.FindAccountServiceResponse;
 import com.sweettracker.account.global.exception.CustomAuthenticationException;
 import com.sweettracker.account.global.exception.CustomNotFoundException;
 import com.sweettracker.account.global.exception.ErrorCode;
@@ -34,7 +34,7 @@ class FindAccountInfoDocsTest extends RestDocsSupport {
 
     @Override
     protected Object initController() {
-        return new FindAccountInfoController(findAccountInfoUseCase);
+        return new FindAccountController(findAccountInfoUseCase);
     }
 
     @Nested

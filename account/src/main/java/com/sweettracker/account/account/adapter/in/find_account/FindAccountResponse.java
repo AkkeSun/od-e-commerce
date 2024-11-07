@@ -1,6 +1,6 @@
-package com.sweettracker.account.account.adapter.in.find_account_info;
+package com.sweettracker.account.account.adapter.in.find_account;
 
-import com.sweettracker.account.account.application.service.find_account_info.FindAccountServiceResponse;
+import com.sweettracker.account.account.application.service.find_account.FindAccountServiceResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @NoArgsConstructor
-class FindAccountInfoResponse {
+class FindAccountResponse {
 
     private Long id;
     private String email;
@@ -20,7 +20,7 @@ class FindAccountInfoResponse {
     private String regDate;
 
     @Builder
-    public FindAccountInfoResponse(Long id, String email, String username, String userTel,
+    public FindAccountResponse(Long id, String email, String username, String userTel,
         String address, String role, String regDate) {
         this.id = id;
         this.email = email;
@@ -31,8 +31,8 @@ class FindAccountInfoResponse {
         this.regDate = regDate;
     }
 
-    FindAccountInfoResponse of(FindAccountServiceResponse serviceResponse) {
-        return FindAccountInfoResponse.builder()
+    FindAccountResponse of(FindAccountServiceResponse serviceResponse) {
+        return FindAccountResponse.builder()
             .id(serviceResponse.id())
             .email(serviceResponse.email())
             .username(serviceResponse.username())
