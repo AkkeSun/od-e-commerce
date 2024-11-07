@@ -16,7 +16,7 @@ class FindAccountInfoController {
 
     private final FindAccountInfoUseCase findAccountInfoUseCase;
 
-    @GetMapping("/accounts/info")
+    @GetMapping("/accounts")
     ApiResponse<FindAccountInfoResponse> findAccountInfo(
         @RequestHeader(name = "Authorization", required = false) String authorization) {
         FindAccountServiceResponse serviceResponse = findAccountInfoUseCase.

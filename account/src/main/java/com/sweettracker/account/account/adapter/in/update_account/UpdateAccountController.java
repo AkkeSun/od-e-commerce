@@ -3,7 +3,6 @@ package com.sweettracker.account.account.adapter.in.update_account;
 import com.sweettracker.account.account.application.port.in.UpdateAccountUseCase;
 import com.sweettracker.account.account.application.service.update_account.UpdateAccountServiceResponse;
 import com.sweettracker.account.global.response.ApiResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +17,12 @@ class UpdateAccountController {
 
     @PutMapping("/accounts")
     ApiResponse<UpdateAccountResponse> updateAccount(
-        @RequestBody @Valid UpdateAccountRequest request,
-        @RequestHeader(name = "Authorization", required = false) String accessToken) {
+        @RequestBody UpdateAccountRequest request,
+        @RequestHeader(name = "Authorization", required = false) String authorization) {
         request.validation();
 
         UpdateAccountServiceResponse serviceResponse = updateAccountUseCase
-            .updateAccount(request.toCommand(accessToken));
+            .updateAccount(request.toCommand(authorization));
         return ApiResponse.ok(new UpdateAccountResponse().of(serviceResponse));
     }
 }
