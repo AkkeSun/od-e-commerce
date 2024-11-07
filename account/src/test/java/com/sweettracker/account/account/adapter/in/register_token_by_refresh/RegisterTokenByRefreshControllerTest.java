@@ -13,11 +13,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.ResultActions;
 
 class RegisterTokenByRefreshControllerTest extends ControllerTestSupport {
 
     @Nested
+    @WithAnonymousUser
     @DisplayName("[registerToken] 리프래시 토큰을 통해 토큰을 갱신하는 API")
     class Describe_registerToken {
 

@@ -13,11 +13,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.ResultActions;
 
 class RegisterTokenControllerTest extends ControllerTestSupport {
 
     @Nested
+    @WithAnonymousUser
     @DisplayName("[registerToken] 사용자 토큰을 등록하는 API")
     class Describe_RegisterToken {
 

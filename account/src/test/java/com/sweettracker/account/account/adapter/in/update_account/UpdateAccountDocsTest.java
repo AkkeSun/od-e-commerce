@@ -2,6 +2,7 @@ package com.sweettracker.account.account.adapter.in.update_account;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -48,7 +49,7 @@ class UpdateAccountDocsTest extends RestDocsSupport {
         private String description = "사용자 정보를 수정하는 API 입니다.";
 
         @Test
-        @DisplayName("[success] 요청 정보를 올바르게 입력한 경우 200 코드와 성공 메시지를 응답한다.")
+        @DisplayName("[success] 권한 정보가 있는 사용자가 요청 정보를 올바르게 입력한 경우 200 코드와 성공 메시지를 응답한다.")
         void success() throws Exception {
             // given
             UpdateAccountRequest request = UpdateAccountRequest.builder()
@@ -112,6 +113,74 @@ class UpdateAccountDocsTest extends RestDocsSupport {
                             )
                             .requestSchema(Schema.schema("[REQUEST] update-account"))
                             .responseSchema(Schema.schema("[RESPONSE] update-account"))
+                            .build()
+                        )
+                    )
+                );
+        }
+
+
+        @Test
+        @DisplayName("[success] 권한 정보가 없는 사용자가 API 를 호출한 경우 401 코드와 에러 메시지를 응답한다.")
+        void error() throws Exception {
+            // given
+            UpdateAccountRequest request = UpdateAccountRequest.builder()
+                .password("111")
+                .passwordCheck("111")
+                .username("od")
+                .userTel("01012341234")
+                .address("서울시 강남구")
+                .build();
+            String authorization = "Bearer invalid-token";
+            given(updateAccountUseCase.updateAccount(any())).willThrow(
+                new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN));
+
+            // when
+            ResultActions actions = mockMvc.perform(put("/accounts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .header("Authorization", authorization)
+            );
+
+            // then
+            actions.andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andDo(document("[updateAccount] 유효하지 않은 토큰 입력",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        resource(ResourceSnippetParameters.builder()
+                            .tag(tag)
+                            .summary(summary)
+                            .description(description)
+                            .requestHeaders(
+                                headerWithName("Authorization").description("인증 토큰")
+                            )
+                            .requestFields(
+                                fieldWithPath("password").type(JsonFieldType.STRING)
+                                    .description("비밀번호").optional(),
+                                fieldWithPath("passwordCheck").type(JsonFieldType.STRING)
+                                    .description("비밀번호 확인").optional(),
+                                fieldWithPath("username").type(JsonFieldType.STRING)
+                                    .description("이름").optional(),
+                                fieldWithPath("userTel").type(JsonFieldType.STRING)
+                                    .description("전화번호").optional(),
+                                fieldWithPath("address").type(JsonFieldType.STRING)
+                                    .description("주소").optional()
+                            )
+                            .responseFields(
+                                fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
+                                    .description("상태 코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                    .description("상태 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                    .description("응답 데이터"),
+                                fieldWithPath("data.errorCode").type(JsonFieldType.NUMBER)
+                                    .description("에러 코드"),
+                                fieldWithPath("data.errorMessage").type(JsonFieldType.STRING)
+                                    .description("에러 메시지")
+                            )
+                            .requestSchema(Schema.schema("[REQUEST] update-account"))
+                            .responseSchema(Schema.schema("[RESPONSE] ERROR"))
                             .build()
                         )
                     )
@@ -208,73 +277,6 @@ class UpdateAccountDocsTest extends RestDocsSupport {
             actions.andDo(print())
                 .andExpect(status().isBadRequest())
                 .andDo(document("[updateAccount] 유효하지 않은 전화번호 형식 입력",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        resource(ResourceSnippetParameters.builder()
-                            .tag(tag)
-                            .summary(summary)
-                            .description(description)
-                            .requestHeaders(
-                                headerWithName("Authorization").description("인증 토큰")
-                            )
-                            .requestFields(
-                                fieldWithPath("password").type(JsonFieldType.STRING)
-                                    .description("비밀번호").optional(),
-                                fieldWithPath("passwordCheck").type(JsonFieldType.STRING)
-                                    .description("비밀번호 확인").optional(),
-                                fieldWithPath("username").type(JsonFieldType.STRING)
-                                    .description("이름").optional(),
-                                fieldWithPath("userTel").type(JsonFieldType.STRING)
-                                    .description("전화번호").optional(),
-                                fieldWithPath("address").type(JsonFieldType.STRING)
-                                    .description("주소").optional()
-                            )
-                            .responseFields(
-                                fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
-                                    .description("상태 코드"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                    .description("상태 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                    .description("응답 데이터"),
-                                fieldWithPath("data.errorCode").type(JsonFieldType.NUMBER)
-                                    .description("에러 코드"),
-                                fieldWithPath("data.errorMessage").type(JsonFieldType.STRING)
-                                    .description("에러 메시지")
-                            )
-                            .requestSchema(Schema.schema("[REQUEST] update-account"))
-                            .responseSchema(Schema.schema("[RESPONSE] ERROR"))
-                            .build()
-                        )
-                    )
-                );
-        }
-
-        @Test
-        @DisplayName("[error] 유효하지 않은 토큰을 입력한 경우 401 코드와 오류 메시지를 응답한다.")
-        void error3() throws Exception {
-            // given
-            UpdateAccountRequest request = UpdateAccountRequest.builder()
-                .password("1234")
-                .passwordCheck("1234")
-                .username("od")
-                .userTel("01012341234")
-                .address("서울시 강남구")
-                .build();
-            String accessToken = "invalid-access-token";
-            given(updateAccountUseCase.updateAccount(request.toCommand(accessToken)))
-                .willThrow(new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN));
-
-            // when
-            ResultActions actions = mockMvc.perform(put("/accounts")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request))
-                .header("Authorization", accessToken)
-            );
-
-            // then
-            actions.andDo(print())
-                .andExpect(status().isUnauthorized())
-                .andDo(document("[updateAccount] 유효하지 않은 토큰 입력",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()

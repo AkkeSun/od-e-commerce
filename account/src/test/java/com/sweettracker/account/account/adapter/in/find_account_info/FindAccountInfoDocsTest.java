@@ -46,7 +46,7 @@ class FindAccountInfoDocsTest extends RestDocsSupport {
         private String description = "인증토큰으로 사용자 정보를 조회하는 API 입니다.";
 
         @Test
-        @DisplayName("[success] API 를 호출했을 때 200 코드와 성공 메시지를 응답한다.")
+        @DisplayName("[success] 권한이 있는 사용자가 API 를 호출했을 때 200 코드와 성공 메시지를 응답한다.")
         void success() throws Exception {
             // given
             String authorization = "Bearer test-success-token";
@@ -62,7 +62,7 @@ class FindAccountInfoDocsTest extends RestDocsSupport {
             given(findAccountInfoUseCase.findAccountInfo(authorization)).willReturn(response);
 
             // when
-            ResultActions actions = mockMvc.perform(get("/accounts/info")
+            ResultActions actions = mockMvc.perform(get("/accounts")
                 .header("Authorization", authorization));
 
             // then
@@ -108,7 +108,7 @@ class FindAccountInfoDocsTest extends RestDocsSupport {
         }
 
         @Test
-        @DisplayName("[error] 유효하지 않는 토큰을 입력한 경우 401 코드와 오류 메시지를 응답한다.")
+        @DisplayName("[error] 권한이 없는 사용자가 API 를 호출했을 401 코드와 오류 메시지를 응답한다.")
         void error() throws Exception {
             // given
             String authorization = "Bearer invalid-token";
@@ -116,7 +116,7 @@ class FindAccountInfoDocsTest extends RestDocsSupport {
                 new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN));
 
             // when
-            ResultActions actions = mockMvc.perform(get("/accounts/info")
+            ResultActions actions = mockMvc.perform(get("/accounts")
                 .header("Authorization", authorization));
 
             // then
@@ -155,12 +155,12 @@ class FindAccountInfoDocsTest extends RestDocsSupport {
         @DisplayName("[error] 조회된 사용자 정보가 없는 경우 404 코드와 오류 메시지를 응답한다.")
         void error2() throws Exception {
             // given
-            String authorization = "Bearer invalid-token";
+            String authorization = "Bearer test-success-token";
             given(findAccountInfoUseCase.findAccountInfo(authorization)).willThrow(
                 new CustomNotFoundException(ErrorCode.DoesNotExist_ACCOUNT_INFO));
 
             // when
-            ResultActions actions = mockMvc.perform(get("/accounts/info")
+            ResultActions actions = mockMvc.perform(get("/accounts")
                 .header("Authorization", authorization));
 
             // then
