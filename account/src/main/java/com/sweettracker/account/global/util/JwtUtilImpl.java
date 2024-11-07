@@ -65,7 +65,8 @@ public class JwtUtilImpl implements JwtUtil {
         return getClaims(token).getSubject();
     }
 
-    private Claims getClaims(String token) {
+    @Override
+    public Claims getClaims(String token) {
         try {
             token = token.replace("Bearer ", "");
             return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();

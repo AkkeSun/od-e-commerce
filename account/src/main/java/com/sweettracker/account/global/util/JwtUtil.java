@@ -1,6 +1,7 @@
 package com.sweettracker.account.global.util;
 
 import com.sweettracker.account.account.domain.Account;
+import io.jsonwebtoken.Claims;
 
 public interface JwtUtil {
 
@@ -11,5 +12,7 @@ public interface JwtUtil {
     boolean validateTokenExceptExpiration(String token);
 
     String getEmail(String token);
+
+    Claims getClaims(String token);
 
 }
