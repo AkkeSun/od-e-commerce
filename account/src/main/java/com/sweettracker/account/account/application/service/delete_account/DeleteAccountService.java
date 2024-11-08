@@ -6,6 +6,7 @@ import com.sweettracker.account.account.application.port.out.ProduceAccountPort;
 import com.sweettracker.account.account.application.port.out.RegisterAccountHistoryPort;
 import com.sweettracker.account.account.domain.Account;
 import com.sweettracker.account.account.domain.AccountHistory;
+import com.sweettracker.account.global.util.JsonUtil;
 import com.sweettracker.account.global.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 class DeleteAccountService implements DeleteAccountUseCase {
 
     private final JwtUtil jwtUtil;
+    private final JsonUtil jsonUtil;
     private final DeleteAccountPort deleteAccountPort;
     private final RegisterAccountHistoryPort registerAccountHistoryPort;
     private final ProduceAccountPort produceAccountPort;
@@ -31,10 +33,9 @@ class DeleteAccountService implements DeleteAccountUseCase {
         history.updateType("DELETE");
         registerAccountHistoryPort.registerAccountHistory(history);
 
-        // TODO: another microservice delete message
-        Account account = new Account().of(claims);
-        produceAccountPort.sendAccountDeleteMsgToOrder(account);
-        produceAccountPort.sendAccountDeleteMsgToDelivery(account);
+        String message = jsonUtil.toJsonString(new Account().of(claims));
+        produceAccountPort.sendMessage("account-delete-to-order", message);
+        produceAccountPort.sendMessage("account-delete-to-delivery", message);
 
         return DeleteAccountServiceResponse.builder()
             .id(history.getAccountId())
