@@ -41,6 +41,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private Authentication makeAuthToken(String token) {
         Claims claims = jwtUtil.getClaims(token);
         return new UsernamePasswordAuthenticationToken(claims.getSubject(), "",
-            List.of(new SimpleGrantedAuthority((String) claims.get("roles"))));
+            List.of(new SimpleGrantedAuthority((String) claims.get("role"))));
     }
 }

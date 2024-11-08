@@ -52,13 +52,13 @@ class RegisterAccountService implements RegisterAccountUseCase {
             .regDateTime(LocalDateTime.now())
             .regDate(dateUtil.getCurrentDate())
             .build();
-        registerAccountPort.register(account);
+        Account savedAccount = registerAccountPort.register(account);
 
-        String accessToken = jwtUtil.createAccessToken(account);
-        String refreshToken = jwtUtil.createRefreshToken(account.getEmail());
+        String accessToken = jwtUtil.createAccessToken(savedAccount);
+        String refreshToken = jwtUtil.createRefreshToken(savedAccount.getEmail());
 
         Token token = Token.builder()
-            .email(account.getEmail())
+            .email(savedAccount.getEmail())
             .userAgent(userAgentUtil.getUserAgent())
             .refreshToken(refreshToken)
             .regDateTime(dateUtil.getCurrentDateTime())

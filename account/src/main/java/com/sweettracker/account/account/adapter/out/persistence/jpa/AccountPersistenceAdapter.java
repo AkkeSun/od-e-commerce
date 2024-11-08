@@ -40,9 +40,10 @@ class AccountPersistenceAdapter implements FindAccountPort, RegisterAccountPort,
     }
 
     @Override
-    public void register(Account account) {
+    public Account register(Account account) {
         AccountEntity entity = accountMapper.toEntity(account);
-        accountRepository.save(entity);
+        AccountEntity savedEntity = accountRepository.save(entity);
+        return accountMapper.toDomain(savedEntity);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.sweettracker.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sweettracker.account.account.application.port.in.DeleteAccountUseCase;
 import com.sweettracker.account.account.application.port.in.FindAccountInfoUseCase;
 import com.sweettracker.account.account.application.port.in.RegisterAccountUseCase;
 import com.sweettracker.account.account.application.port.in.RegisterTokenByRefreshUseCase;
@@ -54,4 +55,6 @@ public class ControllerTestSupport {
     @MockBean
     protected UpdateAccountUseCase updateAccountUseCase;
 
+    @MockBean
+    protected DeleteAccountUseCase deleteAccountUseCase;
 }

@@ -4,5 +4,5 @@ import com.sweettracker.account.account.domain.Account;
 
 public interface RegisterAccountPort {
 
-    void register(Account account);
+    Account register(Account account);
 }

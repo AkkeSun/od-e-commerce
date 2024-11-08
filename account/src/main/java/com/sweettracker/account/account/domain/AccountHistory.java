@@ -1,5 +1,6 @@
 package com.sweettracker.account.account.domain;
 
+import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Builder;
@@ -34,6 +35,15 @@ public class AccountHistory {
         this.detailInfo = detailInfo;
         this.regDate = regDate;
         this.regDateTime = regDateTime;
+    }
+
+    public AccountHistory of(Claims claims) {
+        return AccountHistory.builder()
+            .email(claims.getSubject())
+            .accountId(Long.valueOf((Integer) claims.get("accountId")))
+            .regDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+            .regDateTime(LocalDateTime.now())
+            .build();
     }
 
     public AccountHistory of(Account account) {

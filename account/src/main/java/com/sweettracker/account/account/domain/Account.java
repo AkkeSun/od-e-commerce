@@ -1,5 +1,6 @@
 package com.sweettracker.account.account.domain;
 
+import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,6 +50,17 @@ public class Account {
             .userTel("")
             .address("")
             .role(Role.valueOf(tokenCache.getRole()))
+            .build();
+    }
+
+    public Account of(Claims claims) {
+        return Account.builder()
+            .id(Long.valueOf((Integer) claims.get("accountId")))
+            .email(claims.getSubject())
+            .username("")
+            .userTel("")
+            .address("")
+            .role(Role.valueOf((String) claims.get("role")))
             .build();
     }
 
