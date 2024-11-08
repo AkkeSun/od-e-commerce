@@ -1,0 +1,117 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'com.epages.restdocs-api-spec' version '0.19.0'
+    id 'org.hidetake.swagger.generator' version '2.19.2'
+}
+
+group = 'com.sweettracker'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // circuit breaker
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.1.0'
+    implementation 'commons-codec:commons-codec:1.15'
+
+    // swagger
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.0'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    // observability
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+
+    // springboot 3 jwt
+    implementation "io.jsonwebtoken:jjwt:0.9.1"
+    implementation "javax.xml.bind:jaxb-api:2.3.0" // java 11 부터는 의존성을 직접 주입 해주어야합니다.
+
+    // kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+swaggerSources {
+    sample {
+        setInputFile(file("${project.buildDir}/api-spec/openapi3.yaml"))
+    }
+}
+
+// ./gradlew openapi3 copyOasToSwagger
+openapi3 {
+    servers = [
+            { url = "http://localhost:8081" }
+    ]
+    title = "Product API"
+    description = "상품 정보를 관리하는 API 입니다"
+    outputFileNamePrefix = 'product-api'
+    version = "0.0.1"
+    format = "yaml"
+    outputDirectory = "src/main/resources/static/docs"
+}
+
+tasks.register('copyOasToSwagger', DefaultTask) {
+    doLast {
+        def openapi3File = file("src/main/resources/static/docs/product-api.yaml")
+        def securitySchemesContent = "  securitySchemes:\n" +       \
+                                           "    APIKey:\n" +       \
+                                           "      type: apiKey\n" +       \
+                                           "      name: Authorization\n" +       \
+                                           "      in: header\n" +      \
+                                           "security:\n" +
+                "  - APIKey: []"
+
+        if (openapi3File.exists()) {
+            def existingContent = openapi3File.text
+            def updatedContent = existingContent + "\n" + securitySchemesContent
+            openapi3File.text = updatedContent
+            println "Added JWT authentication to ${openapi3File.path}"
+        } else {
+            println "Warning: openapi3.yaml not found at ${openapi3File.path}"
+        }
+    }
+}
+
+bootJar {
+    archiveFileName = "${rootProject.name}.jar"
+}
+
+jar {
+    enabled = false
+}

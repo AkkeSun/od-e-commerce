@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: product-service
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: false
+
+  datasource:
+    url: jdbc:h2:mem:product;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6389
+      timeout: 3000
+
+server:
+  port: 8082
+
+jwt:
+  token:
+    secret-key: hello-jwt
+    valid-time: 60000 # ms
+    refresh-valid-time: 259200000 # ms (3days)
+
+kafka:
+  host: localhost:29092
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      redis:
+        slidingWindowSize: 1
+        failureRateThreshold: 100
+        waitDurationInOpenState: 1m
+        slow-call-duration-threshold: 3s
+        slow-call-rate-threshold: 100
+        permitted-number-of-calls-in-half-open-state: 5
+    instances:
+      redis:
+        base-config: redis
