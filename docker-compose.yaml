@@ -56,3 +56,15 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+
+  swagger:
+    container_name: swagger
+    image: swaggerapi/swagger-ui
+    environment:
+      - URLS_PRIMARY_NAME=chameleon
+      - "URLS=[ 
+                { url: 'http://localhost:8081/docs/account-api.yaml', name: 'account' },
+            ]"
+    ports:
+      - "7963:8080"

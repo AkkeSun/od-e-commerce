@@ -73,6 +73,7 @@ swaggerSources {
     }
 }
 
+// ./gradlew openapi3 copyOasToSwagger
 openapi3 {
     servers = [
             { url = "http://localhost:8081" }
@@ -83,6 +84,28 @@ openapi3 {
     version = "0.0.1"
     format = "yaml"
     outputDirectory = "src/main/resources/static/docs"
+}
+
+tasks.register('copyOasToSwagger', DefaultTask) {
+    doLast {
+        def openapi3File = file("src/main/resources/static/docs/account-api.yaml")
+        def securitySchemesContent = "  securitySchemes:\n" +       \
+                                           "    APIKey:\n" +       \
+                                           "      type: apiKey\n" +       \
+                                           "      name: Authorization\n" +       \
+                                           "      in: header\n" +      \
+                                           "security:\n" +
+                "  - APIKey: []"
+
+        if (openapi3File.exists()) {
+            def existingContent = openapi3File.text
+            def updatedContent = existingContent + "\n" + securitySchemesContent
+            openapi3File.text = updatedContent
+            println "Added JWT authentication to ${openapi3File.path}"
+        } else {
+            println "Warning: openapi3.yaml not found at ${openapi3File.path}"
+        }
+    }
 }
 
 bootJar {

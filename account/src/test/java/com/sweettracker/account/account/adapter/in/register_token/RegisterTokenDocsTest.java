@@ -40,9 +40,9 @@ class RegisterTokenDocsTest extends RestDocsSupport {
     @DisplayName("[registerToken] 사용자 토큰을 등록하는 API")
     class Describe_RegisterToken {
 
-        private String tag = "Account";
-        private String summary = "사용자 토큰 등록 API";
-        private String description = "이메일과 비밀번호로 인증된 사용자의 토큰을 등록하는 API 입니다.";
+        private String tag = "Token";
+        private String summary = "인증 토큰 발급 API";
+        private String description = "이메일과 비밀번호로 인증 토큰을 발급하는 API 입니다.";
 
         @Test
         @DisplayName("[success] 필수값을 올바르게 입력했을 때 200 코드와 성공 메시지를 응답한다.")

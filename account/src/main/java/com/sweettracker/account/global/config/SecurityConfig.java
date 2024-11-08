@@ -49,6 +49,7 @@ public class SecurityConfig {
                 auth.requestMatchers(HttpMethod.POST, "/accounts").permitAll()
                     .requestMatchers("/accounts/token").permitAll()
                     .requestMatchers("/accounts/refresh-token").permitAll()
+                    .requestMatchers("/docs/**").permitAll()
                     .anyRequest().authenticated();
             })
 

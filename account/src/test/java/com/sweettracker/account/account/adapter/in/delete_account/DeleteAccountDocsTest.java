@@ -45,7 +45,9 @@ class DeleteAccountDocsTest extends RestDocsSupport {
 
         private String tag = "Account";
         private String summary = "사용자 정보 삭제 API";
-        private String description = "사용자 정보를 삭제하는 API 입니다.";
+        private String description = "사용자를 삭제하는 API 입니다. <br>"
+            + "테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다. <br>"
+            + "(요청 헤더에 인증 토큰을 입력하여 테스트하지 않습니다)";
 
         @Test
         @DisplayName("[success] 권한 정보가 있는 사용자가 API 를 요청한 경우 200 코드와 성공 메시지를 응답한다.")
@@ -93,6 +95,7 @@ class DeleteAccountDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.result").type(JsonFieldType.STRING)
                                     .description("삭제 유무")
                             )
+                            .requestHeaders(headerWithName("Authorization").description("인증 토큰"))
                             .responseSchema(Schema.schema("[RESPONSE] delete-account"))
                             .build()
                         )
@@ -140,6 +143,7 @@ class DeleteAccountDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.errorMessage").type(JsonFieldType.STRING)
                                     .description("에러 메시지")
                             )
+                            .requestHeaders(headerWithName("Authorization").description("인증 토큰"))
                             .responseSchema(Schema.schema("[RESPONSE] ERROR"))
                             .build()
                         )
@@ -187,6 +191,7 @@ class DeleteAccountDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.errorMessage").type(JsonFieldType.STRING)
                                     .description("에러 메시지")
                             )
+                            .requestHeaders(headerWithName("Authorization").description("인증 토큰"))
                             .responseSchema(Schema.schema("[RESPONSE] ERROR"))
                             .build()
                         )

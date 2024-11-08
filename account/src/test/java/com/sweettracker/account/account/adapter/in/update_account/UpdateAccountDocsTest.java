@@ -46,7 +46,9 @@ class UpdateAccountDocsTest extends RestDocsSupport {
 
         private String tag = "Account";
         private String summary = "사용자 정보 수정 API";
-        private String description = "사용자 정보를 수정하는 API 입니다.";
+        private String description = "사용자 정보를 수정하는 API 입니다. <br>"
+            + "테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다. <br>"
+            + "(요청 헤더에 인증 토큰을 입력하여 테스트하지 않습니다)";
 
         @Test
         @DisplayName("[success] 권한 정보가 있는 사용자가 요청 정보를 올바르게 입력한 경우 200 코드와 성공 메시지를 응답한다.")

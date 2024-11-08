@@ -48,8 +48,10 @@ public class ApiCallLogFilter extends OncePerRequestFilter {
         String responseBody = new String(wrappedResponse.getContentAsByteArray(),
             StandardCharsets.UTF_8);
 
-        log.info("[{} {}] request - {}", method, uri, requestInfo);
-        log.info("[{} {}] response - {}", method, uri, responseBody);
+        if (!uri.equals("/docs/account-api.yaml")) {
+            log.info("[{} {}] request - {}", method, uri, requestInfo);
+            log.info("[{} {}] response - {}", method, uri, responseBody);
+        }
 
         wrappedResponse.copyBodyToResponse();
     }

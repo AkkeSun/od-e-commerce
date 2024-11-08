@@ -40,9 +40,10 @@ class RegisterTokenByRefreshDocsTest extends RestDocsSupport {
     @DisplayName("[registerToken] 리프래시 토큰을 통해 사용자 토큰을 갱신하는 API")
     class Describe_registerToken {
 
-        private String tag = "Account";
-        private String summary = "사용자 토큰 갱신 API";
-        private String description = "리프래시 토큰을 통해 사용자 토큰을 갱신하는 API";
+        private String tag = "Token";
+        private String summary = "인증 토큰 갱신 API";
+        private String description = "리프래시 토큰으로 인증 토큰을 갱신하는 API 입니다. <br>"
+            + "리프레시 토큰을 발급받은 기기와 다른 기기에서 시도하거 리프레시토큰이 만료된 경우 갱신에 실패합니다.";
 
         @Test
         @DisplayName("[success] API 를 호출했을 때 200 코드와 성공 메시지를 응답한다.")

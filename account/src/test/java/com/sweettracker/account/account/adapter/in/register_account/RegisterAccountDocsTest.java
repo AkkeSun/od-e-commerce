@@ -40,7 +40,7 @@ class RegisterAccountDocsTest extends RestDocsSupport {
 
         private String tag = "Account";
         private String summary = "사용자 등록 API";
-        private String description = "새로운 사용자를 등록하는 API 입니다.";
+        private String description = "사용자를 등록하는 API 입니다.";
 
         @Test
         @DisplayName("[success] 필수값을 모두 입력했을 때 200코드와 성공 메시지를 응답한다.")

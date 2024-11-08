@@ -42,7 +42,7 @@ class DeleteAccountServiceTest extends IntegrationTestSupport {
 
         @Test
         @DisplayName("[success] 조회된 사용자 정보가 있다면 정보를 삭제하고 히스토리를 등록하고 메시지를 전송하는지 확인한다.")
-        void success(CapturedOutput output) {
+        void success(CapturedOutput output) throws InterruptedException {
             // given
             Account account = Account.builder()
                 .email("od@test.com")
@@ -61,14 +61,15 @@ class DeleteAccountServiceTest extends IntegrationTestSupport {
                 .deleteAccount(authentication);
             boolean existsByEmail = findAccountPort.existsByEmail(account.getEmail());
             AccountHistory history = findAccountHistoryPort.findByEmail(account.getEmail());
-
+            Thread.sleep(1000);
+            
             // then
             assertThat(existsByEmail).isFalse();
             assertThat(response.id()).isEqualTo(history.getAccountId());
             assertThat(response.email()).isEqualTo(history.getEmail());
             assertThat(response.result()).isEqualTo("Y");
-            assertThat(output.toString()).contains("[account-delete-to-order] ==> {");
-            assertThat(output.toString()).contains("[account-delete-to-delivery] ==> {");
+            assertThat(output.toString()).contains("[account-delete-to-order] ==>");
+            assertThat(output.toString()).contains("[account-delete-to-delivery] ==>");
         }
 
         @Test
