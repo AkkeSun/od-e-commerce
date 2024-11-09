@@ -1,5 +1,6 @@
 package com.sweettracker.account.account.domain;
 
+import com.sweettracker.account.token.domain.Token;
 import io.jsonwebtoken.Claims;
 import java.time.LocalDateTime;
 import lombok.Builder;
