@@ -23,14 +23,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 class FindProductListService implements FindProductListUseCase {
 
-    @Value("${service-constant.product.response-page-size}")
-    private int responsePageSize;
     private final DateUtil dateUtil;
     private final JsonUtil jsonUtil;
     private final ProduceProductPort produceProductPort;
     private final FindProductEsPort findProductPort;
     private final FindProductCachePort findProductCachePort;
-
+    @Value("${service-constant.product.response-page-size}")
+    private int responsePageSize;
 
     @Override
     public List<FindProductListServiceResponse> findProductList(FindProductListCommand command) {
@@ -76,6 +75,13 @@ class FindProductListService implements FindProductListUseCase {
             }
 
             products.addAll(findProductPort.findByCategory(command));
+            // 이미 노출한 상품 아이디 제외
+            if (!command.excludeProductIds().isEmpty()) {
+                products = products.stream()
+                    .filter(
+                        product -> command.excludeProductIds().contains(product.getProductId()))
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+            }
         }
         return products;
     }
