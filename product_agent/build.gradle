@@ -1,0 +1,68 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.product_agent'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // circuit breaker
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.1.0'
+    implementation 'commons-codec:commons-codec:1.15'
+
+    // observability
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+
+    // kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    // lang chain
+    implementation 'dev.langchain4j:langchain4j-chroma:0.36.0'
+    implementation 'dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:0.36.0'
+
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootJar {
+    archiveFileName = "${rootProject.name}.jar"
+}
+
+jar {
+    enabled = false
+}

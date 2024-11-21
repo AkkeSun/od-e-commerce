@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: product-service-agent
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  datasource:
+    shard1:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: test
+      url: jdbc:mysql://localhost:3307/product?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      hikari:
+        maximum-pool-size=10
+        minimum-idle=3
+        connection-timeout=100000
+    shard2:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: test
+      url: jdbc:mysql://localhost:13307/product?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      hikari:
+        maximum-pool-size=10
+        minimum-idle=3
+        connection-timeout=100000
+
+server:
+  port: 18082
+
+kafka:
+  host: localhost:29092
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      redis:
+        slidingWindowSize: 1
+        failureRateThreshold: 100
+        waitDurationInOpenState: 1m
+        slow-call-duration-threshold: 3s
+        slow-call-rate-threshold: 100
+        permitted-number-of-calls-in-half-open-state: 5
+    instances:
+      redis:
+        base-config: redis
