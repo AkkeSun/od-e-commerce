@@ -7,13 +7,11 @@ import com.product.product.application.port.in.FindProductListUseCase;
 import com.product.product.application.port.in.command.FindProductListCommand;
 import com.product.product.application.port.out.FindProductCachePort;
 import com.product.product.application.port.out.FindProductEsPort;
+import com.product.product.application.port.out.FindProductVectorPort;
 import com.product.product.application.port.out.ProduceProductPort;
-import com.product.product.domain.Category;
 import com.product.product.domain.Product;
-import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +26,7 @@ class FindProductListService implements FindProductListUseCase {
     private final ProduceProductPort produceProductPort;
     private final FindProductEsPort findProductPort;
     private final FindProductCachePort findProductCachePort;
+    private final FindProductVectorPort findProductVectorPort;
     @Value("${service-constant.product.response-page-size}")
     private int responsePageSize;
 
@@ -39,11 +38,24 @@ class FindProductListService implements FindProductListUseCase {
             produceProductPort.sendMessage("product-search-keyword-topic", objectNode.toString());
         }
 
+        // ------ STEP 1 : cache search------
         LinkedHashSet<Product> products = findProductCachePort.findByKeyword(command);
+
+        // ------ STEP 2 : elasticsearch ------
         if (products == null) {
-            products = getProductsByElasticSearch(command);
+            products = findProductPort.findByKeyword(command);
         }
 
+        // ------ STEP 3 : vector search ------
+        if (products.size() != responsePageSize) {
+            products.addAll(findProductVectorPort.findProductList(command));
+            if (command.excludeProductIds() != null) {
+                products = products.stream()
+                    .filter(
+                        product -> command.excludeProductIds().contains(product.getProductId()))
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+            }
+        }
         return products.stream()
             .limit(responsePageSize)
             .map(product -> FindProductListServiceResponse.builder()
@@ -56,33 +68,5 @@ class FindProductListService implements FindProductListUseCase {
                 .regDateTime(product.getRegDateTime())
                 .build())
             .toList();
-    }
-
-    private LinkedHashSet<Product> getProductsByElasticSearch(FindProductListCommand command) {
-        // ---------- step 1 : keyword search ----------
-        LinkedHashSet<Product> products = findProductPort.findByKeyword(command);
-
-        // ---------- step 2 : category search ----------
-        if (products.size() != responsePageSize) {
-            Category category = command.category();
-            if (category.equals(Category.TOTAL)) {
-                category = products.stream()
-                    .collect(Collectors.groupingBy(Product::getCategory, Collectors.counting()))
-                    .entrySet().stream()
-                    .max(Comparator.comparingLong(Entry::getValue))
-                    .map(Entry::getKey)
-                    .orElse(null);
-            }
-
-            products.addAll(findProductPort.findByCategory(command));
-            // 이미 노출한 상품 아이디 제외
-            if (!command.excludeProductIds().isEmpty()) {
-                products = products.stream()
-                    .filter(
-                        product -> command.excludeProductIds().contains(product.getProductId()))
-                    .collect(Collectors.toCollection(LinkedHashSet::new));
-            }
-        }
-        return products;
     }
 }

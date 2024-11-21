@@ -57,23 +57,7 @@ class ProductEsPersistenceAdapter implements RegisterProductEsPort, FindProductE
             .map(hits -> productMapper.toDomain(hits.getContent()))
             .collect(Collectors.toCollection(LinkedHashSet::new));
     }
-
-    @Override
-    public LinkedHashSet<Product> findByCategory(FindProductListCommand command) {
-        CriteriaQuery query;
-        if (command.category().equals(Category.TOTAL)) {
-            query = new CriteriaQuery(new Criteria());
-        } else {
-            query = new CriteriaQuery(Criteria.where("category").is(command.category().name()));
-        }
-        query.setPageable(makePageRequest(command.page(), responsePageSize, command.sortType()));
-        SearchHits<ProductEsDocument> searchHits = elasticsearchOperations
-            .search(query, ProductEsDocument.class);
-        return searchHits.stream()
-            .map(hits -> productMapper.toDomain(hits.getContent()))
-            .collect(Collectors.toCollection(LinkedHashSet::new));
-    }
-
+    
     private PageRequest makePageRequest(int page, int size, ProductSortType sortType) {
         return switch (sortType) {
             case LOWEST_PRICE -> PageRequest.of(page, size, Sort.by(Direction.ASC, "price"));

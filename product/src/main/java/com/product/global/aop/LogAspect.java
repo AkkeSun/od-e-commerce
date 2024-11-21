@@ -25,6 +25,10 @@ public class LogAspect {
     private void controllerMethods() {
     }
 
+    @Pointcut("@annotation(com.product.global.aop.ExceptionHandlerLog))")
+    private void exceptionHandlerMethods() {
+    }
+
     @Pointcut("@annotation(io.micrometer.tracing.annotation.NewSpan))")
     private void newSpan() {
     }
@@ -56,6 +60,16 @@ public class LogAspect {
         Object result = joinPoint.proceed();
         log.info("[{} {}] response - {}", httpMethod, path, result);
 
+        return result;
+    }
+
+    @Around("exceptionHandlerMethods()")
+    public Object exceptionLog(ProceedingJoinPoint joinPoint) throws Throwable {
+        String httpMethod = request.getMethod();
+        String path = request.getRequestURI();
+        Object result = joinPoint.proceed();
+
+        log.error("[{} {}] response - {}", httpMethod, path, result);
         return result;
     }
 

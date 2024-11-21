@@ -73,6 +73,6 @@ service-constant:
     dataCenterId: 0
     workerId: 1
   product:
-    search-page-size: 30
+    search-page-size: 100
     response-page-size: 10
 
