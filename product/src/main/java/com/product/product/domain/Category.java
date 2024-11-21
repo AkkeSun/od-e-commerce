@@ -12,5 +12,5 @@ public enum Category {
     FURNITURE,       // 가구
     AUTOMOTIVE,      // 자동차 용품
     HEALTH,          // 건강
-    PET_SUPPLIES     // 반려동물 용품
+    TOTAL            // 전체
 }

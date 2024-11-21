@@ -18,7 +18,8 @@ class FindProductListController {
     @GetMapping("/products")
     ApiResponse<List<FindProductListResponse>> findProductList(
         @Valid FindProductListRequest request) {
-
+        request.validation();
+        
         List<FindProductListServiceResponse> serviceResponse = findProductListUseCase
             .findProductList(request.toCommand());
         return ApiResponse.ok(serviceResponse.stream().map(response ->
