@@ -3,11 +3,9 @@ package com.product_agent.product.application.service.register_product_vector;
 import com.product_agent.product.application.port.in.RegisterProductVectorUseCase;
 import com.product_agent.product.application.port.out.DeleteProductVectorPort;
 import com.product_agent.product.application.port.out.FindProductPort;
-import com.product_agent.product.application.port.out.GenerateEmbeddingPort;
 import com.product_agent.product.application.port.out.RegisterProductVectorPort;
 import com.product_agent.product.application.port.out.UpdateProductPort;
 import com.product_agent.product.domain.Product;
-import dev.langchain4j.data.embedding.Embedding;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +22,6 @@ class RegisterProductVectorService implements RegisterProductVectorUseCase {
 
     private final UpdateProductPort updateProductPort;
 
-    private final GenerateEmbeddingPort generateEmbeddingPort;
-
     private final RegisterProductVectorPort registerProductVectorPort;
 
     private final DeleteProductVectorPort deleteProductVectorPort;
@@ -37,7 +33,6 @@ class RegisterProductVectorService implements RegisterProductVectorUseCase {
 
     @Override
     public void registerProductVector() {
-        // STEP 1: find product list
         List<Product> productList = findProductPort.findByEmbeddingYn("N");
         if (productList.isEmpty()) {
             log.info("registerProductVector total -- 0");
@@ -49,22 +44,16 @@ class RegisterProductVectorService implements RegisterProductVectorUseCase {
             try {
                 boolean isRdbUpdated = false;
 
-                // STEP 2: generate embedding
                 String document = String.format(documentTemplate, product.getProductName(),
                     product.getCategory(), product.getPrice(), product.getDescription());
-                Embedding embed = generateEmbeddingPort.embed(document);
 
-                // STEP 3: vector register
                 String vectorId = registerProductVectorPort
-                    .registerProductVector(document, embed, product);
+                    .registerProductVector(document, product);
 
-                // STEP 4 : update rdb product
                 if (StringUtils.hasText(vectorId)) {
                     isRdbUpdated = updateProductPort
                         .updateEmbeddingYnByProductId(product.getProductId(), "Y");
                 }
-
-                // STEP 5 : if rdb product update fail, rollback
                 if (!isRdbUpdated) {
                     deleteProductVectorPort.deleteProductVector(vectorId);
                 }
