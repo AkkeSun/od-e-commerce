@@ -35,32 +35,31 @@ public class CustomErrorLogFilter extends OncePerRequestFilter {
             (responseBody.contains("UNAUTHORIZED") && responseBody.contains("errorCode\":3003")) ||
             responseBody.contains("FORBIDDEN") && responseBody.contains("errorCode\":5002")) {
 
+            String method = request.getMethod();
+            String uri = request.getRequestURI();
+
+            ObjectNode requestInfo = new ObjectMapper().createObjectNode();
+            ObjectNode requestParam = new ObjectMapper().createObjectNode();
+            ObjectNode requestBody = new ObjectMapper().createObjectNode();
+
+            // request parameter
+            request.getParameterMap().forEach((key, value) -> {
+                requestParam.put(key, String.join(",", value));
+            });
+
+            // request body
             try {
-                String method = request.getMethod();
-                String uri = request.getRequestURI();
-
-                ObjectNode requestInfo = new ObjectMapper().createObjectNode();
-                ObjectNode requestParam = new ObjectMapper().createObjectNode();
-                ObjectNode requestBody = new ObjectMapper().createObjectNode();
-
-                // request parameter
-                request.getParameterMap().forEach((key, value) -> {
-                    requestParam.put(key, String.join(",", value));
-                });
-
-                // request body
                 String requestBodyStr = new String(wrappedRequest.getContentAsByteArray(),
                     StandardCharsets.UTF_8);
                 requestBody = (ObjectNode) new ObjectMapper().readTree(requestBodyStr);
-
-                requestInfo.put("param", requestParam);
-                requestInfo.put("body", requestBody);
-
-                log.info("[{} {}] request - {}", method, uri, requestInfo);
-                log.info("[{} {}] response - {}", method, uri, responseBody);
-
             } catch (Exception ignored) {
             }
+
+            requestInfo.put("param", requestParam);
+            requestInfo.put("body", requestBody);
+
+            log.info("[{} {}] request - {}", method, uri, requestInfo);
+            log.info("[{} {}] response - {}", method, uri, responseBody);
         }
         wrappedResponse.copyBodyToResponse();
     }
