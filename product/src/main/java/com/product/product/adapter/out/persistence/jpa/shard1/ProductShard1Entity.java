@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "PRODUCT")
 @NoArgsConstructor
-public class ProductShard1Entity {
+class ProductShard1Entity {
 
     @Id
     @Column(name = "TABLE_INDEX")
