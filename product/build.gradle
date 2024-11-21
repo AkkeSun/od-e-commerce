@@ -54,6 +54,10 @@ dependencies {
     // kafka
     implementation 'org.springframework.kafka:spring-kafka'
 
+    // elastic search
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+
+    implementation 'mysql:mysql-connector-java:8.0.33'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
@@ -89,12 +93,12 @@ openapi3 {
 tasks.register('copyOasToSwagger', DefaultTask) {
     doLast {
         def openapi3File = file("src/main/resources/static/docs/product-api.yaml")
-        def securitySchemesContent = "  securitySchemes:\n" +       \
-                                           "    APIKey:\n" +       \
-                                           "      type: apiKey\n" +       \
-                                           "      name: Authorization\n" +       \
-                                           "      in: header\n" +      \
-                                           "security:\n" +
+        def securitySchemesContent = "  securitySchemes:\n" +                             \
+                                                                 "    APIKey:\n" +                             \
+                                                                 "      type: apiKey\n" +                             \
+                                                                 "      name: Authorization\n" +                             \
+                                                                 "      in: header\n" +                            \
+                                                                 "security:\n" +
                 "  - APIKey: []"
 
         if (openapi3File.exists()) {

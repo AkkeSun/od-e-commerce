@@ -9,17 +9,27 @@ spring:
     properties:
       hibernate:
         format_sql: false
+        dialect: org.hibernate.dialect.MySQLDialect
 
   datasource:
-    url: jdbc:h2:mem:product;MODE=MySQL
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    shard1:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: test
+      url: jdbc:mysql://localhost:3307/product?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      hikari:
+        maximum-pool-size=10
+        minimum-idle=3
+        connection-timeout=100000
+    shard2:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: test
+      url: jdbc:mysql://localhost:13307/product?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      hikari:
+        maximum-pool-size=10
+        minimum-idle=3
+        connection-timeout=100000
 
   data:
     redis:
@@ -27,14 +37,17 @@ spring:
       port: 6389
       timeout: 3000
 
+  elasticsearch:
+    username: elastic
+    password: 1234
+    uris: localhost:9200
+
 server:
   port: 8082
 
 jwt:
   token:
     secret-key: hello-jwt
-    valid-time: 60000 # ms
-    refresh-valid-time: 259200000 # ms (3days)
 
 kafka:
   host: localhost:29092
@@ -52,3 +65,14 @@ resilience4j:
     instances:
       redis:
         base-config: redis
+
+service-constant:
+  aes:
+    secret-key: testKey
+  snowflake:
+    dataCenterId: 0
+    workerId: 1
+  product:
+    search-page-size: 30
+    response-page-size: 10
+

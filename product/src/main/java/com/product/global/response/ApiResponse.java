@@ -1,5 +1,7 @@
 package com.product.global.response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -30,10 +32,10 @@ public class ApiResponse<T> {
 
     @Override
     public String toString() {
-        return "{" +
-            "httpStatus:" + httpStatus +
-            ", message:'" + message + '\'' +
-            ", data:" + data +
-            '}';
+        try {
+            return new ObjectMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            return super.toString();
+        }
     }
 }

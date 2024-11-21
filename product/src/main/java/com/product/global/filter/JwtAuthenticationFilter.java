@@ -25,16 +25,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
-
         try {
             String token = request.getHeader("Authorization");
-            if (token == null) {
-                System.out.println("token is null");
-            }
             if (jwtUtil.validateTokenExceptExpiration(token)) {
                 SecurityContextHolder.getContext().setAuthentication(makeAuthToken(token));
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
             // 예외는 authenticationEntryPoint 에서 처리합니다.
         }
 

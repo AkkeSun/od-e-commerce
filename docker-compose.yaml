@@ -1,14 +1,16 @@
 version: "3"
-networks:
-  kafka_network:
 
 volumes:
-  Kafka00:
-    driver: local
-  Kafka01:
-    driver: local
-  Kafka02:
-    driver: local
+  esdata:
+  product-mysql-01:
+  product-mysql-02:
+  chromadb:
+
+networks:
+  elasticsearch-net:
+    driver: bridge
+  chroma-net:
+    driver: bridge
 
 services:
   redis_prod:
@@ -68,3 +70,64 @@ services:
             ]"
     ports:
       - "7963:8080"
+
+  product-mysql-01:
+    container_name: product-mysql-01
+    image: mysql
+    ports:
+      - 3307:3306
+    volumes:
+      - product-mysql-01:/var/lib/mysql
+      - ./product/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: product
+    restart: always
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  product-mysql-02:
+    container_name: product-mysql-02
+    image: mysql
+    ports:
+      - 13307:3306
+    volumes:
+      - product-mysql-02:/var/lib/mysql
+      - ./product/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: product
+    restart: always
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
+    environment:
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=1234
+    ports:
+      - "9200:9200"
+    networks:
+      - elasticsearch-net
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+  chroma:
+    container_name: chroma-db
+    image: chromadb/chroma:latest
+    volumes:
+      - chromadb:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+      - ANONYMIZED_TELEMETRY=${ANONYMIZED_TELEMETRY:-TRUE}
+    ports:
+      - 8000:8000
+    networks:
+      - chroma-net
