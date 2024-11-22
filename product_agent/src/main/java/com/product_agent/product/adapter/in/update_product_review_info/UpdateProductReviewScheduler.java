@@ -1,4 +1,4 @@
-package com.product_agent.product.adapter.in.update_product_review;
+package com.product_agent.product.adapter.in.update_product_review_info;
 
 public class UpdateProductReviewScheduler {
 
