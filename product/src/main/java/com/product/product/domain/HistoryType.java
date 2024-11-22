@@ -2,5 +2,7 @@ package com.product.product.domain;
 
 public enum HistoryType {
     DELETE,
-    UPDATE
+    UPDATE_INFO,
+    QUANTITY,
+    SALES_COUNT
 }

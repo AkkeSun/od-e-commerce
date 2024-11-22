@@ -49,6 +49,9 @@ class ProductShard2Entity {
     @Column(name = "SALES_COUNT")
     private long salesCount;
 
+    @Column(name = "HIT_COUNT")
+    private long hitCount;
+
     @Column(name = "REVIEW_COUNT")
     private long reviewCount;
 
@@ -72,12 +75,10 @@ class ProductShard2Entity {
     private LocalDateTime regDateTime;
 
     @Builder
-    ProductShard2Entity(long productId, long sellerId, String sellerEmail,
-        String productName,
+    ProductShard2Entity(long productId, long sellerId, String sellerEmail, String productName,
         String productImg, String productOption, String description, long price, long quantity,
-        long salesCount, long reviewCount, double reviewScore, double totalScore,
-        String embeddingYn,
-        Category category, String regDate, LocalDateTime regDateTime) {
+        long salesCount, long hitCount, long reviewCount, double reviewScore, double totalScore,
+        String embeddingYn, Category category, String regDate, LocalDateTime regDateTime) {
         this.productId = productId;
         this.sellerId = sellerId;
         this.sellerEmail = sellerEmail;
@@ -88,6 +89,7 @@ class ProductShard2Entity {
         this.price = price;
         this.quantity = quantity;
         this.salesCount = salesCount;
+        this.hitCount = hitCount;
         this.reviewCount = reviewCount;
         this.reviewScore = reviewScore;
         this.totalScore = totalScore;

@@ -20,7 +20,7 @@ public enum ErrorCode {
 
     // status code 422 (4001 - 4099)
     Business_SAVED_ACCOUNT_INFO(4001, "등록된 사용자 정보 입니다"),
-
+    Business_OUT_OF_STOCK(4002, "상품 재고가 부족합니다"),
 
     // status code 403 (5001 - 5099)
     ACCESS_DENIED(5001, "접근권한이 없습니다"),

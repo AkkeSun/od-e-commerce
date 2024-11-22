@@ -24,6 +24,7 @@ public class Product {
     private long quantity;
     private long salesCount;
     private long reviewCount;
+    private long hitCount;
     private double reviewScore;
     private double totalScore;
     private Category category;
@@ -34,7 +35,8 @@ public class Product {
     @Builder
     public Product(Long productId, long sellerId, String sellerEmail, String productName,
         String productImg, List<String> productOption, String description, long price,
-        long quantity, long salesCount, long reviewCount, double reviewScore, double totalScore,
+        long quantity,
+        long salesCount, long reviewCount, long hitCount, double reviewScore, double totalScore,
         Category category, String embeddingYn, String regDate, LocalDateTime regDateTime) {
         this.productId = productId;
         this.sellerId = sellerId;
@@ -47,6 +49,7 @@ public class Product {
         this.quantity = quantity;
         this.salesCount = salesCount;
         this.reviewCount = reviewCount;
+        this.hitCount = hitCount;
         this.reviewScore = reviewScore;
         this.totalScore = totalScore;
         this.category = category;
@@ -68,6 +71,7 @@ public class Product {
             .reviewCount(0)
             .reviewScore(0)
             .totalScore(0)
+            .hitCount(0)
             .embeddingYn("N")
             .category(Category.valueOf(command.category()))
             .regDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
@@ -81,5 +85,18 @@ public class Product {
 
     public boolean existProductOption() {
         return productOption != null && !productOption.isEmpty();
+    }
+
+    public boolean isAvailableForSale(int salesCount) {
+        return 10 <= quantity + salesCount;
+    }
+
+    public void updateSaleCount(int salesCount) {
+        this.salesCount += salesCount;
+        this.quantity -= salesCount;
+    }
+
+    public void addQuantity(int quantity) {
+        this.quantity += quantity;
     }
 }

@@ -11,7 +11,7 @@ class ProductShard2Mapper {
 
     private final JsonUtil jsonUtil;
 
-    ProductShard2Entity toShard2Entity(Product product) {
+    ProductShard2Entity toEntity(Product product) {
         return ProductShard2Entity.builder()
             .productId(product.getProductId())
             .sellerId(product.getSellerId())
@@ -24,6 +24,7 @@ class ProductShard2Mapper {
             .price(product.getPrice())
             .quantity(product.getQuantity())
             .salesCount(product.getSalesCount())
+            .hitCount(product.getHitCount())
             .reviewCount(product.getReviewCount())
             .reviewScore(product.getReviewScore())
             .category(product.getCategory())
@@ -46,6 +47,7 @@ class ProductShard2Mapper {
             .price(entity.getPrice())
             .quantity(entity.getQuantity())
             .salesCount(entity.getSalesCount())
+            .hitCount(entity.getHitCount())
             .reviewCount(entity.getReviewCount())
             .reviewScore(entity.getReviewScore())
             .category(entity.getCategory())

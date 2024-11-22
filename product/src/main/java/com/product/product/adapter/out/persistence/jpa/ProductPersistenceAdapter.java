@@ -5,6 +5,7 @@ import com.product.product.adapter.out.persistence.jpa.shard1.ProductShard1Adapt
 import com.product.product.adapter.out.persistence.jpa.shard2.ProductShard2Adapter;
 import com.product.product.application.port.out.FindProductPort;
 import com.product.product.application.port.out.RegisterProductPort;
+import com.product.product.application.port.out.UpdateProductPort;
 import com.product.product.domain.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -13,7 +14,8 @@ import org.springframework.stereotype.Component;
 @Primary
 @Component
 @RequiredArgsConstructor
-class ProductPersistenceAdapter implements RegisterProductPort, FindProductPort {
+class ProductPersistenceAdapter implements FindProductPort,
+    RegisterProductPort, UpdateProductPort {
 
     private final ShardKeyUtil shardKeyUtil;
     private final ProductShard1Adapter productShard1Adapter;
@@ -29,5 +31,19 @@ class ProductPersistenceAdapter implements RegisterProductPort, FindProductPort 
     public Product findById(Long id) {
         return shardKeyUtil.isShard1(id) ?
             productShard1Adapter.findById(id) : productShard2Adapter.findById(id);
+    }
+
+    @Override
+    public Product updateProductSaleInfo(Product product, Long accountId, int productCount) {
+        return shardKeyUtil.isShard1(product.getProductId()) ?
+            productShard1Adapter.updateProductSaleInfo(product, accountId, productCount) :
+            productShard2Adapter.updateProductSaleInfo(product, accountId, productCount);
+    }
+
+    @Override
+    public Product updateProductQuantity(Product product, int quantity) {
+        return shardKeyUtil.isShard1(product.getProductId()) ?
+            productShard1Adapter.updateProductQuantity(product, quantity) :
+            productShard2Adapter.updateProductQuantity(product, quantity);
     }
 }

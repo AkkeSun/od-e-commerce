@@ -61,6 +61,9 @@ dependencies {
     implementation 'dev.langchain4j:langchain4j-chroma:0.36.0'
     implementation 'dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:0.36.0'
 
+    // 분산락
+    implementation 'org.redisson:redisson-spring-boot-starter:3.17.4'
+
     implementation 'mysql:mysql-connector-java:8.0.33'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'

@@ -54,7 +54,7 @@ public class SecurityConfig {
                 auth.requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                     .requestMatchers("/docs/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/products").hasRole("SELLER")
-                    .requestMatchers(HttpMethod.POST, "/products").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/products/*/sales").hasRole("CUSTOMER")
                     .anyRequest().authenticated();
             })
 
