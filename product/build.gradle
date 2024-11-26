@@ -64,6 +64,7 @@ dependencies {
     // 분산락
     implementation 'org.redisson:redisson-spring-boot-starter:3.17.4'
 
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     implementation 'mysql:mysql-connector-java:8.0.33'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
@@ -100,12 +101,12 @@ openapi3 {
 tasks.register('copyOasToSwagger', DefaultTask) {
     doLast {
         def openapi3File = file("src/main/resources/static/docs/product-api.yaml")
-        def securitySchemesContent = "  securitySchemes:\n" +                             \
-                                                                 "    APIKey:\n" +                             \
-                                                                 "      type: apiKey\n" +                             \
-                                                                 "      name: Authorization\n" +                             \
-                                                                 "      in: header\n" +                            \
-                                                                 "security:\n" +
+        def securitySchemesContent = "  securitySchemes:\n" +                               \
+                                                                   "    APIKey:\n" +                               \
+                                                                   "      type: apiKey\n" +                               \
+                                                                   "      name: Authorization\n" +                               \
+                                                                   "      in: header\n" +                              \
+                                                                   "security:\n" +
                 "  - APIKey: []"
 
         if (openapi3File.exists()) {

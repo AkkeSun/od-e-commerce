@@ -3,6 +3,7 @@ package com.product.global.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.util.LinkedHashSet;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class JsonUtilImpl implements JsonUtil {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+
+    public JsonUtilImpl() {
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
+    }
 
     @Override
     public <T> T parseJson(String json, Class<T> valueType) {
