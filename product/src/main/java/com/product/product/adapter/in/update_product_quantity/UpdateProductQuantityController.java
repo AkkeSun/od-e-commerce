@@ -16,13 +16,13 @@ class UpdateProductQuantityController {
 
     private final UpdateProductSalesUseCase updateProductSalesUseCase;
 
-    @PutMapping("/products/{productId}/sales")
+    @PutMapping("/products/{productId}/quantity")
     ApiResponse<UpdateProductQuantityResponse> updateProductQuantity(
         @RequestBody UpdateProductQuantityRequest request,
         @RequestHeader("Authorization") String authentication,
         @PathVariable Long productId) {
         request.validation();
-        
+
         UpdateProductQuantityServiceResponse serviceResponse = updateProductSalesUseCase
             .updateProductSales(request.toCommand(productId, authentication));
         return ApiResponse.ok(new UpdateProductQuantityResponse().of(serviceResponse));

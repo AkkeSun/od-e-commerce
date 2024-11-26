@@ -88,7 +88,7 @@ public class Product {
     }
 
     public boolean isAvailableForSale(int salesCount) {
-        return 10 <= quantity + salesCount;
+        return 10 <= quantity - salesCount;
     }
 
     public void updateSaleCount(int salesCount) {

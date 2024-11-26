@@ -54,7 +54,6 @@ public class SecurityConfig {
                 auth.requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                     .requestMatchers("/docs/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/products").hasRole("SELLER")
-                    .requestMatchers(HttpMethod.PUT, "/products/*/sales").hasRole("CUSTOMER")
                     .anyRequest().authenticated();
             })
 
@@ -84,8 +83,8 @@ public class SecurityConfig {
                     String responseBody = jsonUtil.toJsonString(ApiResponse.of(
                         HttpStatus.FORBIDDEN,
                         ErrorResponse.builder()
-                            .errorCode(ErrorCode.ACCESS_DENIED.getCode())
-                            .errorMessage(ErrorCode.ACCESS_DENIED.getMessage())
+                            .errorCode(ErrorCode.ACCESS_DENIED_BY_SECURITY.getCode())
+                            .errorMessage(ErrorCode.ACCESS_DENIED_BY_SECURITY.getMessage())
                             .build()));
                     res.setContentType("application/json;charset=UTF-8");
                     res.setStatus(HttpStatus.FORBIDDEN.value());

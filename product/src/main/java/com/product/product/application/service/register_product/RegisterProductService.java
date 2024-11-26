@@ -4,6 +4,7 @@ import com.product.global.util.JwtUtil;
 import com.product.global.util.SnowflakeGenerator;
 import com.product.product.application.port.in.RegisterProductUseCase;
 import com.product.product.application.port.in.command.RegisterProductCommand;
+import com.product.product.application.port.out.DeleteProductPort;
 import com.product.product.application.port.out.RegisterProductEsPort;
 import com.product.product.application.port.out.RegisterProductPort;
 import com.product.product.domain.Product;
@@ -22,6 +23,7 @@ class RegisterProductService implements RegisterProductUseCase {
     private final SnowflakeGenerator snowflakeGenerator;
     private final RegisterProductPort registerProductPort;
     private final RegisterProductEsPort registerProductEsPort;
+    private final DeleteProductPort deleteProductPort;
 
     @Override
     @NewSpan
@@ -30,7 +32,15 @@ class RegisterProductService implements RegisterProductUseCase {
         Product product = new Product().of(command, claims);
         product.updateProductId(snowflakeGenerator.nextId());
         Product savedProduct = registerProductPort.register(product);
-        registerProductEsPort.register(savedProduct);
+
+        // elastic search error transaction rollback
+        try {
+            registerProductEsPort.register(savedProduct);
+        } catch (Exception e) {
+            deleteProductPort.deleteById(savedProduct.getProductId());
+            throw new RuntimeException(e);
+        }
+
         return RegisterProductServiceResponse.builder()
             .productId(savedProduct.getProductId())
             .sellerEmail(savedProduct.getSellerEmail())

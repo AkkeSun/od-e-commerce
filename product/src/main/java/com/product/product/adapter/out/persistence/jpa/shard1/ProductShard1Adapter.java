@@ -3,8 +3,8 @@ package com.product.product.adapter.out.persistence.jpa.shard1;
 import com.product.global.exception.CustomNotFoundException;
 import com.product.global.exception.ErrorCode;
 import com.product.global.util.DateUtil;
-import com.product.global.util.ShardKeyUtil;
 import com.product.global.util.SnowflakeGenerator;
+import com.product.product.application.port.out.DeleteProductPort;
 import com.product.product.application.port.out.FindProductPort;
 import com.product.product.application.port.out.RegisterProductPort;
 import com.product.product.application.port.out.UpdateProductPort;
@@ -19,10 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional("primaryTransactionManager")
 public class ProductShard1Adapter implements RegisterProductPort, FindProductPort,
-    UpdateProductPort {
+    UpdateProductPort, DeleteProductPort {
 
     private final DateUtil dateUtil;
-    private final ShardKeyUtil shardKeyUtil;
     private final SnowflakeGenerator snowflakeGenerator;
     private final ProductShard1Mapper productMapper;
     private final ProductShard1Repository productRepository;
@@ -67,5 +66,10 @@ public class ProductShard1Adapter implements RegisterProductPort, FindProductPor
             .regDateTime(LocalDateTime.now())
             .build());
         return null;
+    }
+
+    @Override
+    public void deleteById(Long productId) {
+        productRepository.deleteById(productId);
     }
 }

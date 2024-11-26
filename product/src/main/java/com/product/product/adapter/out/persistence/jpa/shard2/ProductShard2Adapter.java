@@ -2,8 +2,9 @@ package com.product.product.adapter.out.persistence.jpa.shard2;
 
 import com.product.global.exception.CustomNotFoundException;
 import com.product.global.exception.ErrorCode;
-import com.product.global.util.ShardKeyUtil;
+import com.product.global.util.DateUtil;
 import com.product.global.util.SnowflakeGenerator;
+import com.product.product.application.port.out.DeleteProductPort;
 import com.product.product.application.port.out.FindProductPort;
 import com.product.product.application.port.out.RegisterProductPort;
 import com.product.product.application.port.out.UpdateProductPort;
@@ -18,10 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional("secondaryTransactionManager")
 public class ProductShard2Adapter implements RegisterProductPort, FindProductPort,
-    UpdateProductPort {
+    UpdateProductPort, DeleteProductPort {
 
+    private final DateUtil dateUtil;
     private final ProductShard2Mapper productMapper;
-    private final ShardKeyUtil shardKeyUtil;
     private final SnowflakeGenerator snowflakeGenerator;
     private final ProductShard2Repository productRepository;
     private final ProductHistoryShard2Repository productHistoryRepository;
@@ -48,7 +49,7 @@ public class ProductShard2Adapter implements RegisterProductPort, FindProductPor
             .productId(product.getProductId())
             .type(HistoryType.SALES_COUNT)
             .detailInfo("accountId: " + accountId + ", count : " + productCount)
-            .regDate(LocalDateTime.now().toString())
+            .regDate(dateUtil.getCurrentDate())
             .regDateTime(LocalDateTime.now())
             .build());
         return product;
@@ -66,5 +67,10 @@ public class ProductShard2Adapter implements RegisterProductPort, FindProductPor
             .regDateTime(LocalDateTime.now())
             .build());
         return product;
+    }
+
+    @Override
+    public void deleteById(Long productId) {
+        productRepository.deleteById(productId);
     }
 }
