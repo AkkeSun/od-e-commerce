@@ -1,24 +1,29 @@
 package com.product_agent.product.adapter.out.persistence.jpa.shard2;
 
 import com.product_agent.product.domain.Product;
-import java.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Component;
 
 @Component
 class ProductShard2Mapper {
 
-    final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     Product toDomain(ProductShard2Entity entity) {
         return Product.builder()
             .productId(entity.getProductId())
-            .sellerEmail(entity.getSellerEmail())
             .productName(entity.getProductName())
-            .productImg(entity.getProductImg())
-            .description(entity.getDescription())
             .price(entity.getPrice())
+            .description(entity.getDescription())
+            .sellerEmail(entity.getSellerEmail())
+            .productImg(entity.getProductImg())
+            .quantity(entity.getQuantity())
+            .salesCount(entity.getSalesCount())
+            .reviewCount(entity.getReviewCount())
+            .hitCount(entity.getHitCount())
+            .reviewScore(entity.getReviewScore())
+            .totalScore(entity.getTotalScore())
             .category(entity.getCategory())
-            .regDateTime(entity.getRegDateTime().format(formatter))
+            .embeddingYn(entity.getEmbeddingYn())
+            .regDate(entity.getRegDate())
+            .regDateTime(entity.getRegDateTime())
             .build();
     }
 }

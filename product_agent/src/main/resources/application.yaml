@@ -31,6 +31,11 @@ spring:
         minimum-idle=3
         connection-timeout=100000
 
+  elasticsearch:
+    username: elastic
+    password: 1234
+    uris: localhost:9200
+
 server:
   port: 18082
 
@@ -50,3 +55,8 @@ resilience4j:
     instances:
       redis:
         base-config: redis
+
+service-constant:
+  snowflake:
+    dataCenterId: 0
+    workerId: 1

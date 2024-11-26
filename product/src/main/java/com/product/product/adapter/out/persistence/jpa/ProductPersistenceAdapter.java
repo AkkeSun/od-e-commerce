@@ -3,6 +3,7 @@ package com.product.product.adapter.out.persistence.jpa;
 import com.product.global.util.ShardKeyUtil;
 import com.product.product.adapter.out.persistence.jpa.shard1.ProductShard1Adapter;
 import com.product.product.adapter.out.persistence.jpa.shard2.ProductShard2Adapter;
+import com.product.product.application.port.out.DeleteProductPort;
 import com.product.product.application.port.out.FindProductPort;
 import com.product.product.application.port.out.RegisterProductPort;
 import com.product.product.application.port.out.UpdateProductPort;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 class ProductPersistenceAdapter implements FindProductPort,
-    RegisterProductPort, UpdateProductPort {
+    RegisterProductPort, UpdateProductPort, DeleteProductPort {
 
     private final ShardKeyUtil shardKeyUtil;
     private final ProductShard1Adapter productShard1Adapter;
@@ -45,5 +46,14 @@ class ProductPersistenceAdapter implements FindProductPort,
         return shardKeyUtil.isShard1(product.getProductId()) ?
             productShard1Adapter.updateProductQuantity(product, quantity) :
             productShard2Adapter.updateProductQuantity(product, quantity);
+    }
+
+    @Override
+    public void deleteById(Long productId) {
+        if (shardKeyUtil.isShard1(productId)) {
+            productShard1Adapter.deleteById(productId);
+        } else {
+            productShard2Adapter.deleteById(productId);
+        }
     }
 }

@@ -1,6 +1,6 @@
-package com.product.product.adapter.out.persistence.elasticSearch;
+package com.product_agent.product.adapter.out.persistence.elasticSearch;
 
-import com.product.product.domain.Category;
+import com.product_agent.product.domain.Category;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,8 +49,9 @@ public class ProductEsDocument {
 
     @Builder
     public ProductEsDocument(Long productId, String productName, String description,
-        String sellerEmail, String productImg, long price, long salesCount, long reviewCount,
-        double totalScore, Category category, String regDateTime) {
+        String sellerEmail,
+        String productImg, long price, long salesCount, long reviewCount, double totalScore,
+        Category category, String regDateTime) {
         this.productId = productId;
         this.productName = productName;
         this.description = description;

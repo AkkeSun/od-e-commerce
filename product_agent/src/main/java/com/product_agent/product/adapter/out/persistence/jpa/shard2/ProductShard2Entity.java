@@ -46,6 +46,9 @@ public class ProductShard2Entity {
     @Column(name = "QUANTITY")
     private long quantity;
 
+    @Column(name = "HIT_COUNT")
+    private long hitCount;
+
     @Column(name = "SALES_COUNT")
     private long salesCount;
 
@@ -73,11 +76,10 @@ public class ProductShard2Entity {
 
     @Builder
     ProductShard2Entity(long productId, long sellerId, String sellerEmail,
-        String productName,
-        String productImg, String productOption, String description, long price, long quantity,
-        long salesCount, long reviewCount, double reviewScore, double totalScore,
-        String embeddingYn,
-        Category category, String regDate, LocalDateTime regDateTime) {
+        String productName, String productImg, String productOption, String description, long price,
+        long quantity, long hitCount, long salesCount, long reviewCount, double reviewScore,
+        double totalScore, String embeddingYn, Category category, String regDate,
+        LocalDateTime regDateTime) {
         this.productId = productId;
         this.sellerId = sellerId;
         this.sellerEmail = sellerEmail;
@@ -87,6 +89,7 @@ public class ProductShard2Entity {
         this.description = description;
         this.price = price;
         this.quantity = quantity;
+        this.hitCount = hitCount;
         this.salesCount = salesCount;
         this.reviewCount = reviewCount;
         this.reviewScore = reviewScore;
@@ -95,9 +98,5 @@ public class ProductShard2Entity {
         this.category = category;
         this.regDate = regDate;
         this.regDateTime = regDateTime;
-    }
-
-    public void updateEmbeddingYn(String yn) {
-        this.embeddingYn = yn;
     }
 }

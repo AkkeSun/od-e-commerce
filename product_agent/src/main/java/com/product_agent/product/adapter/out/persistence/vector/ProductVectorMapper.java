@@ -16,7 +16,7 @@ public class ProductVectorMapper {
         metadata.put("productImg", product.getProductImg());
         metadata.put("price", product.getPrice());
         metadata.put("category", product.getCategory().name());
-        metadata.put("regDateTime", product.getRegDateTime());
+        metadata.put("regDateTime", String.valueOf(product.getRegDateTime()));
         return metadata;
     }
 }
