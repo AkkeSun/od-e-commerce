@@ -25,8 +25,6 @@ class ProductEsPersistenceAdapter implements RegisterProductEsPort, FindProductE
 
     @Value("${service-constant.product.response-page-size}")
     private int responsePageSize;
-    @Value("${service-constant.product.search-page-size}")
-    private int searchPageSize;
     private final ProductEsDocumentMapper productMapper;
     private final ElasticsearchOperations elasticsearchOperations;
 

@@ -11,7 +11,6 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
-import org.springframework.data.elasticsearch.core.query.UpdateResponse.Result;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,19 +36,12 @@ class ElasticSearchPersistenceAdapter implements FindProductEsPort, UpdateProduc
 
     @Override
     public void updateSalesCount(Product product) {
-        ProductEsDocument savedProduct = elasticsearchOperations.get(
-            String.valueOf(product.getProductId()),
-            ProductEsDocument.class,
-            IndexCoordinates.of("product")
-        );
-
         Document document = Document.create();
         document.put("salesCount", product.getSalesCount());
 
         UpdateQuery updateQuery = UpdateQuery.builder(String.valueOf(product.getProductId()))
             .withDocument(document)
             .build();
-        Result reuslt = elasticsearchOperations.update(updateQuery,
-            IndexCoordinates.of("product")).getResult();
+        elasticsearchOperations.update(updateQuery, IndexCoordinates.of("product"));
     }
 }
