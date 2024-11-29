@@ -1,0 +1,32 @@
+spring:
+
+  datasource:
+    shard1:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: test
+      url: jdbc:mysql://localhost:3307/product?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      hikari:
+        maximum-pool-size=10
+        minimum-idle=3
+        connection-timeout=100000
+    shard2:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: test
+      url: jdbc:mysql://localhost:13307/product?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      hikari:
+        maximum-pool-size=10
+        minimum-idle=3
+        connection-timeout=100000
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6389
+      timeout: 3000
+
+  elasticsearch:
+    username: elastic
+    password: 1234
+    uris: localhost:9200
