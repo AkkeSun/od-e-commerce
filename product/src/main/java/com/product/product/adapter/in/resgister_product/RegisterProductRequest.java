@@ -52,7 +52,7 @@ class RegisterProductRequest {
         try {
             Category.valueOf(category);
         } catch (IllegalArgumentException e) {
-            throw new CustomValidationException("유효한 카테고리가 아닙니다.");
+            throw new CustomValidationException("유효한 카테고리가 아닙니다");
         }
     }
 
