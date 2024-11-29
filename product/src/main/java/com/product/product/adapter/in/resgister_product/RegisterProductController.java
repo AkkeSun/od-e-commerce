@@ -18,7 +18,7 @@ class RegisterProductController {
 
     @PostMapping("/products")
     ApiResponse<?> registerProduct(@RequestBody @Valid RegisterProductRequest request,
-        @RequestHeader("Authorization") String authorization) {
+        @RequestHeader(name = "Authorization", required = false) String authorization) {
         request.validate();
 
         RegisterProductServiceResponse serviceResponse = registerProductUseCase
