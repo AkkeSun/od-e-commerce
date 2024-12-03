@@ -2,7 +2,9 @@ package com.product.product.adapter.in.find_product_list;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.product.global.exception.CustomValidationException;
+import com.product.global.validation.ValidSortType;
+import com.product.global.validation.groups.ValidationGroups.CustomGroups;
+import com.product.global.validation.groups.ValidationGroups.NotBlankGroups;
 import com.product.product.application.port.in.command.FindProductListCommand;
 import com.product.product.domain.Category;
 import com.product.product.domain.ProductSortType;
@@ -17,10 +19,11 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor
 class FindProductListRequest {
 
-    @NotBlank(message = "검색어는 필수값 입니다")
+    @NotBlank(message = "검색어는 필수값 입니다", groups = NotBlankGroups.class)
     private String keyword;
 
-    @NotBlank(message = "정렬 타입은 필수값 입니다")
+    @ValidSortType(groups = CustomGroups.class)
+    @NotBlank(message = "정렬 타입은 필수값 입니다", groups = NotBlankGroups.class)
     private String sortType;
 
     private int page;
@@ -37,21 +40,6 @@ class FindProductListRequest {
         this.page = page;
         this.category = category;
         this.excludeProductIds = excludeProductIds;
-    }
-
-    void validation() {
-        try {
-            ProductSortType.valueOf(sortType);
-        } catch (IllegalArgumentException e) {
-            throw new CustomValidationException("유효하지 않은 정렬 타입 입니다");
-        }
-        if (StringUtils.hasText(category)) {
-            try {
-                Category.valueOf(category);
-            } catch (IllegalArgumentException e) {
-                throw new CustomValidationException("존재하지 않은 카테고리 입니다");
-            }
-        }
     }
 
     FindProductListCommand toCommand() {
