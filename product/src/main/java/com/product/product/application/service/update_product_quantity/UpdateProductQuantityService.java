@@ -29,8 +29,8 @@ class UpdateProductQuantityService implements UpdateProductSalesUseCase {
     private final ProduceProductPort produceProductPort;
 
     @Override
-    @DistributedLock(key = "updateProductCount")
-    public UpdateProductQuantityServiceResponse updateProductSales(
+    @DistributedLock(key = "updateProductQuantity")
+    public UpdateProductQuantityServiceResponse updateProductQuantity(
         UpdateProductSalesCommand command) {
         Claims claims = jwtUtil.getClaims(command.authentication());
         Long accountId = claims.get("accountId", Long.class);

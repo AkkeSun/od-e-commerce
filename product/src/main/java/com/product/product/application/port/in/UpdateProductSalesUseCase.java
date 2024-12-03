@@ -5,5 +5,5 @@ import com.product.product.application.service.update_product_quantity.UpdatePro
 
 public interface UpdateProductSalesUseCase {
 
-    UpdateProductQuantityServiceResponse updateProductSales(UpdateProductSalesCommand command);
+    UpdateProductQuantityServiceResponse updateProductQuantity(UpdateProductSalesCommand command);
 }

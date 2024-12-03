@@ -1,16 +1,12 @@
 package com.product.global.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.product.global.exception.ErrorCode;
 import com.product.global.exception.ErrorResponse;
 import com.product.global.filter.CustomErrorLogFilter;
 import com.product.global.filter.JwtAuthenticationFilter;
 import com.product.global.response.ApiResponse;
 import com.product.global.util.JsonUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +22,6 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.util.ContentCachingRequestWrapper;
 
 @Configuration
 @EnableWebSecurity
@@ -71,7 +66,6 @@ public class SecurityConfig {
                             .errorCode(ErrorCode.INVALID_ACCESS_TOKEN_BY_SECURITY.getCode())
                             .errorMessage(ErrorCode.INVALID_ACCESS_TOKEN_BY_SECURITY.getMessage())
                             .build()));
-                    final Map<String, Object> requestData = getRequestData(req);
                     res.setContentType("application/json;charset=UTF-8");
                     res.setStatus(HttpStatus.UNAUTHORIZED.value());
                     res.getWriter().write(responseBody);
@@ -110,28 +104,5 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    private Map<String, Object> getRequestData(HttpServletRequest request) {
-        Map<String, Object> params = new HashMap<>();
-
-        // request parameter
-        request.getParameterMap().forEach((key, value) -> {
-            params.put(key, String.join(",", value));
-        });
-
-        // request body (캐싱된 body 정보를 가져옵니다)
-        try {
-            ContentCachingRequestWrapper cachingRequest = (ContentCachingRequestWrapper) request;
-            String requestBody = new String(cachingRequest.getContentAsByteArray(),
-                StandardCharsets.UTF_8);
-            Map<String, Object> bodyParams = new ObjectMapper().readValue(requestBody,
-                Map.class);
-            params.putAll(bodyParams);
-
-        } catch (Exception ignored) {
-        }
-
-        return params;
     }
 }

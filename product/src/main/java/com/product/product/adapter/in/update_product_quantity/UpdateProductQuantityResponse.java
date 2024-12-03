@@ -9,16 +9,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 class UpdateProductQuantityResponse {
 
-    private String resuult;
+    private String result;
 
     @Builder
-    UpdateProductQuantityResponse(String resuult) {
-        this.resuult = resuult;
+    UpdateProductQuantityResponse(String result) {
+        this.result = result;
     }
 
     UpdateProductQuantityResponse of(UpdateProductQuantityServiceResponse serviceResponse) {
         return UpdateProductQuantityResponse.builder()
-            .resuult(serviceResponse.result())
+            .result(serviceResponse.result())
             .build();
     }
 }

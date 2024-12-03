@@ -25,7 +25,7 @@ class UpdateProductQuantityController {
         @PathVariable Long productId) {
 
         UpdateProductQuantityServiceResponse serviceResponse = updateProductSalesUseCase
-            .updateProductSales(request.toCommand(productId, authentication));
+            .updateProductQuantity(request.toCommand(productId, authentication));
         return ApiResponse.ok(new UpdateProductQuantityResponse().of(serviceResponse));
     }
 }
