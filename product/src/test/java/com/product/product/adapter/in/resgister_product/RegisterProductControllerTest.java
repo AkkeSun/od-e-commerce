@@ -591,5 +591,108 @@ class RegisterProductControllerTest extends ControllerTestSupport {
                 .andExpect(jsonPath("$.data.errorMessage").value("유효한 카테고리가 아닙니다"))
                 .andDo(print());
         }
+
+        @Test
+        @WithMockUser(roles = "SELLER")
+        @DisplayName("[error] 판매 권한을 가진 사용자가 상품 이미지를 50자를 초과하여 입력했을 때400코드와 에러 메시지를 응답한다.")
+        void error16() throws Exception {
+            // given
+            RegisterProductRequest request = RegisterProductRequest.builder()
+                .productName("상품명")
+                .productImg("이미지오류이미지오류이미지오류이미지오류이미지오류이미지오류이미지오류이미지오류이미지오류이미지오류이미지오류")
+                .description("상품 설명")
+                .productOption(List.of("옵션1", "옵션2"))
+                .price(10000)
+                .quantity(50)
+                .category("AUTOMOTIVE")
+                .build();
+            String authorization = "testToken";
+
+            // when
+            ResultActions actions = mockMvc.perform(post("/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", authorization)
+                .content(objectMapper.writeValueAsString(request))
+            );
+
+            // then
+            actions.andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.httpStatus").value(400))
+                .andExpect(jsonPath("$.message").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.data.errorCode").value(1001))
+                .andExpect(jsonPath("$.data.errorMessage").value("상품 이미지는 50자 이하여야 합니다"))
+                .andDo(print());
+        }
+
+        @Test
+        @WithMockUser(roles = "SELLER")
+        @DisplayName("[error] 판매 권한을 가진 사용자가 상품명을 50자를 초과하여 입력했을 때400코드와 에러 메시지를 응답한다.")
+        void error17() throws Exception {
+            // given
+            RegisterProductRequest request = RegisterProductRequest.builder()
+                .productName("상품명오류상품명오류상품명오류상품명오류상품명오류상품명오류상품명오류상품명오류상품명오류상품명오류")
+                .productImg("이미지")
+                .description("상품 설명")
+                .productOption(List.of("옵션1", "옵션2"))
+                .price(10000)
+                .quantity(50)
+                .category("AUTOMOTIVE")
+                .build();
+            String authorization = "testToken";
+
+            // when
+            ResultActions actions = mockMvc.perform(post("/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", authorization)
+                .content(objectMapper.writeValueAsString(request))
+            );
+
+            // then
+            actions.andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.httpStatus").value(400))
+                .andExpect(jsonPath("$.message").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.data.errorCode").value(1001))
+                .andExpect(jsonPath("$.data.errorMessage").value("상품명은 50자 이하여야 합니다"))
+                .andDo(print());
+        }
+
+        @Test
+        @WithMockUser(roles = "SELLER")
+        @DisplayName("[error] 판매 권한을 가진 사용자가 상품 설명 최대 글자를 초과하여 입력했을 때400코드와 에러 메시지를 응답한다.")
+        void error18() throws Exception {
+            // given
+            String hangul = "안녕하세요"; // 15 byte
+            RegisterProductRequest request = RegisterProductRequest.builder()
+                .productName("상품명")
+                .productImg("이미지")
+                .description(String.valueOf(hangul.repeat(4370)))
+                .productOption(List.of("옵션1", "옵션2"))
+                .price(10000)
+                .quantity(50)
+                .category("AUTOMOTIVE")
+                .build();
+            String authorization = "testToken";
+
+            // when
+            ResultActions actions = mockMvc.perform(post("/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", authorization)
+                .content(objectMapper.writeValueAsString(request))
+            );
+
+            // then
+            actions.andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.httpStatus").value(400))
+                .andExpect(jsonPath("$.message").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.data.errorCode").value(1001))
+                .andExpect(jsonPath("$.data.errorMessage").value("상품 설명의 최대 글자수를 초과하였습니다"))
+                .andDo(print());
+        }
     }
 }
