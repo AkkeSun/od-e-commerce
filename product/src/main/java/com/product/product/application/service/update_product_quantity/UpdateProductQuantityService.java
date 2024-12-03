@@ -32,7 +32,7 @@ class UpdateProductQuantityService implements UpdateProductSalesUseCase {
     @DistributedLock(key = "updateProductQuantity")
     public UpdateProductQuantityServiceResponse updateProductQuantity(
         UpdateProductSalesCommand command) {
-        Claims claims = jwtUtil.getClaims(command.authentication());
+        Claims claims = jwtUtil.getClaims(command.authorization());
         Long accountId = claims.get("accountId", Long.class);
 
         Product product = findProductPort.findById(command.productId());

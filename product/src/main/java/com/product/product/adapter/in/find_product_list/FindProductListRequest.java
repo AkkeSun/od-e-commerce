@@ -33,7 +33,7 @@ class FindProductListRequest {
     private List<Long> excludeProductIds;
 
     @Builder
-    public FindProductListRequest(String keyword, String sortType, int page, String category,
+    FindProductListRequest(String keyword, String sortType, int page, String category,
         List<Long> excludeProductIds) {
         this.keyword = keyword;
         this.sortType = sortType;

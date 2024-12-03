@@ -25,12 +25,12 @@ class UpdateProductQuantityRequest {
         this.isSale = isSale;
     }
 
-    UpdateProductSalesCommand toCommand(Long productId, String authentication) {
+    UpdateProductSalesCommand toCommand(Long productId, String authorization) {
         return UpdateProductSalesCommand.builder()
             .productCount(productCount)
             .isSale(isSale)
             .productId(productId)
-            .authentication(authentication)
+            .authorization(authorization)
             .build();
     }
 }

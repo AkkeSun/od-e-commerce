@@ -7,7 +7,7 @@ public record UpdateProductSalesCommand(
     Long productId,
     Integer productCount,
     boolean isSale,
-    String authentication
+    String authorization
 ) {
 
 }
