@@ -1,11 +1,10 @@
 package com.product.global.validation.validator;
 
-import com.product.global.validation.ValidCategory;
-import com.product.product.domain.Category;
+import com.product.global.validation.Category;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class CategoryValidator implements ConstraintValidator<ValidCategory, String> {
+public class CategoryValidator implements ConstraintValidator<Category, String> {
 
     @Override
     public boolean isValid(String input, ConstraintValidatorContext context) {
@@ -13,7 +12,7 @@ public class CategoryValidator implements ConstraintValidator<ValidCategory, Str
             return true;
         }
         try {
-            Category.valueOf(input);
+            com.product.product.domain.Category.valueOf(input);
             return true;
         } catch (IllegalArgumentException e) {
             return false;

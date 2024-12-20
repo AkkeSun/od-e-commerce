@@ -2,7 +2,7 @@ package com.product.product.adapter.in.find_product_list;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.product.global.validation.ValidSortType;
+import com.product.global.validation.SortType;
 import com.product.global.validation.groups.ValidationGroups.CustomGroups;
 import com.product.global.validation.groups.ValidationGroups.NotBlankGroups;
 import com.product.product.application.port.in.command.FindProductListCommand;
@@ -22,7 +22,7 @@ class FindProductListRequest {
     @NotBlank(message = "검색어는 필수값 입니다", groups = NotBlankGroups.class)
     private String keyword;
 
-    @ValidSortType(groups = CustomGroups.class)
+    @SortType(groups = CustomGroups.class)
     @NotBlank(message = "정렬 타입은 필수값 입니다", groups = NotBlankGroups.class)
     private String sortType;
 

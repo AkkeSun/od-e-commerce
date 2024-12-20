@@ -2,8 +2,8 @@ package com.product.product.adapter.in.resgister_product;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.product.global.validation.ValidCategory;
-import com.product.global.validation.ValidTextColumn;
+import com.product.global.validation.Category;
+import com.product.global.validation.TextColumn;
 import com.product.global.validation.groups.ValidationGroups.CustomGroups;
 import com.product.global.validation.groups.ValidationGroups.NotBlankGroups;
 import com.product.global.validation.groups.ValidationGroups.SizeGroups;
@@ -26,7 +26,7 @@ class RegisterProductRequest {
     @Size(max = 50, message = "상품 이미지는 50자 이하여야 합니다", groups = SizeGroups.class)
     private String productImg;
 
-    @ValidCategory(groups = CustomGroups.class)
+    @Category(groups = CustomGroups.class)
     @NotBlank(message = "카테고리는 필수값 입니다", groups = SizeGroups.class)
     private String category;
 
@@ -35,7 +35,7 @@ class RegisterProductRequest {
     private String productName;
     
     @NotBlank(message = "상품 설명은 필수값 입니다", groups = NotBlankGroups.class)
-    @ValidTextColumn(message = "상품 설명의 최대 글자수를 초과하였습니다", groups = CustomGroups.class)
+    @TextColumn(message = "상품 설명의 최대 글자수를 초과하였습니다", groups = CustomGroups.class)
     private String description;
 
     @Min(value = 1, message = "금액은 필수값 입니다", groups = SizeGroups.class)
