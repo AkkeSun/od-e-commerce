@@ -40,7 +40,6 @@ public class ProductShard2Adapter implements RegisterProductPort, FindProductPor
         return productMapper.toDomain(entity);
     }
 
-
     @Override
     public Product updateProductSaleInfo(Product product, Long accountId, int productCount) {
         productRepository.updateSalesCountAndQuantity(product);
@@ -72,5 +71,10 @@ public class ProductShard2Adapter implements RegisterProductPort, FindProductPor
     @Override
     public void deleteById(Long productId) {
         productRepository.deleteById(productId);
+    }
+
+    @Override
+    public void deleteAll() {
+        productRepository.deleteAll();
     }
 }

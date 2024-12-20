@@ -3,6 +3,7 @@ package com.product.product.adapter.out.persistence.elasticSearch;
 import com.product.product.application.port.in.command.FindProductListCommand;
 import com.product.product.application.port.out.FindProductEsPort;
 import com.product.product.application.port.out.RegisterProductEsPort;
+import com.product.product.application.port.out.ResetProductEsIndex;
 import com.product.product.domain.Category;
 import com.product.product.domain.Product;
 import com.product.product.domain.ProductSortType;
@@ -21,7 +22,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class ProductEsPersistenceAdapter implements RegisterProductEsPort, FindProductEsPort {
+class ProductEsPersistenceAdapter implements RegisterProductEsPort, FindProductEsPort,
+    ResetProductEsIndex {
 
     @Value("${service-constant.product.response-page-size}")
     private int responsePageSize;
@@ -39,12 +41,12 @@ class ProductEsPersistenceAdapter implements RegisterProductEsPort, FindProductE
     public LinkedHashSet<Product> findByKeyword(FindProductListCommand command) {
         CriteriaQuery query;
         if (command.category().equals(Category.TOTAL)) {
-            query = new CriteriaQuery(Criteria.where("productName").contains(command.keyword())
-                .or(Criteria.where("description").contains(command.keyword())));
+            query = new CriteriaQuery(Criteria.where("productName").matchesAll(command.keyword())
+                .or(Criteria.where("description").matchesAll(command.keyword())));
         } else {
             query = new CriteriaQuery(Criteria.where("category").is(command.category().name())
-                .and(Criteria.where("productName").contains(command.keyword())
-                    .or(Criteria.where("description").contains(command.keyword()))));
+                .and(Criteria.where("productName").matchesAll(command.keyword())
+                    .or(Criteria.where("description").matchesAll(command.keyword()))));
         }
 
         query.setPageable(makePageRequest(command.page(), responsePageSize, command.sortType()));
@@ -65,5 +67,11 @@ class ProductEsPersistenceAdapter implements RegisterProductEsPort, FindProductE
             case MOST_REVIEWS -> PageRequest.of(page, size, Sort.by(Direction.DESC, "reviewCount"));
             default -> PageRequest.of(page, size, Sort.by(Direction.DESC, "totalScore"));
         };
+    }
+
+    @Override // for test
+    public void resetIndex() {
+        elasticsearchOperations.indexOps(ProductEsDocument.class).delete();
+        elasticsearchOperations.indexOps(ProductEsDocument.class).create();
     }
 }

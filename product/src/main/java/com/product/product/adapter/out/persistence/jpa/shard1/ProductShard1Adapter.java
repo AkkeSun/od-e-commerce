@@ -72,4 +72,9 @@ public class ProductShard1Adapter implements RegisterProductPort, FindProductPor
     public void deleteById(Long productId) {
         productRepository.deleteById(productId);
     }
+
+    @Override
+    public void deleteAll() {
+        productRepository.deleteAll();
+    }
 }

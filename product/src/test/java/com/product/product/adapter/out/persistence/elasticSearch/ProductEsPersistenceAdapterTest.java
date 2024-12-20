@@ -17,7 +17,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 
@@ -25,9 +24,6 @@ class ProductEsPersistenceAdapterTest extends IntegrationTestSupport {
 
     @Autowired
     private ProductEsPersistenceAdapter productEsPersistenceAdapter;
-
-    @Autowired
-    private ElasticsearchOperations elasticsearchOperations;
 
     ProductEsDocument findById(Long id) {
         return elasticsearchOperations.get(
@@ -106,7 +102,7 @@ class ProductEsPersistenceAdapterTest extends IntegrationTestSupport {
             // given
             Product product1 = Product.builder()
                 .productId(21L)
-                .productName("od 신발")
+                .productName("od 신발 입니다")
                 .price(10000)
                 .description("테스트 상품 입니다")
                 .category(Category.AUTOMOTIVE)
@@ -145,7 +141,7 @@ class ProductEsPersistenceAdapterTest extends IntegrationTestSupport {
             Thread.sleep(1000);
 
             FindProductListCommand command = FindProductListCommand.builder()
-                .keyword("od")
+                .keyword("od 신발")
                 .category(Category.TOTAL)
                 .page(0)
                 .sortType(ProductSortType.LOWEST_PRICE)

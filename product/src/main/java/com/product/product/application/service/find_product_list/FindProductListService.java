@@ -14,9 +14,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 class FindProductListService implements FindProductListUseCase {
@@ -38,24 +40,27 @@ class FindProductListService implements FindProductListUseCase {
             produceProductPort.sendMessage("product-search-keyword-topic", objectNode.toString());
         }
 
-        // ------ STEP 1 : cache search------
-        LinkedHashSet<Product> products = findProductCachePort.findByKeyword(command);
+        // ------ STEP 1 : cache search ------
+        List<FindProductListServiceResponse> cache = findCache(command);
+        if (cache != null) {
+            log.debug("[findProductList] response from cache");
+            return cache;
+        }
 
         // ------ STEP 2 : elasticsearch ------
-        if (products == null) {
-            products = findProductPort.findByKeyword(command);
-        }
+        LinkedHashSet<Product> products = findProductPort.findByKeyword(command);
 
         // ------ STEP 3 : vector search ------
         if (products.size() != responsePageSize) {
             products.addAll(findProductVectorPort.findProductList(command));
             if (command.excludeProductIds() != null) {
                 products = products.stream()
-                    .filter(
-                        product -> command.excludeProductIds().contains(product.getProductId()))
+                    .filter(p -> !command.excludeProductIds().contains(p.getProductId()))
                     .collect(Collectors.toCollection(LinkedHashSet::new));
             }
+            log.debug("[findProductList] response from vector");
         }
+
         return products.stream()
             .limit(responsePageSize)
             .map(product -> FindProductListServiceResponse.builder()
@@ -68,5 +73,26 @@ class FindProductListService implements FindProductListUseCase {
                 .regDateTime(product.getRegDateTime())
                 .build())
             .toList();
+    }
+
+    public List<FindProductListServiceResponse> findCache(FindProductListCommand command) {
+
+        List<FindProductListServiceResponse> cache = findProductCachePort.findByKeyword(command);
+        if (cache == null) {
+            return null;
+        }
+
+        int startIndex = command.page() * responsePageSize;
+        int endIndex = Math.min(startIndex + responsePageSize, cache.size());
+        if (startIndex >= cache.size() || endIndex > cache.size()) {
+            return null;
+        }
+
+        List<FindProductListServiceResponse> slicedData = cache.subList(startIndex, endIndex);
+        if (slicedData.size() < responsePageSize) {
+            return null;
+        }
+
+        return slicedData;
     }
 }

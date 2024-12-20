@@ -44,7 +44,7 @@ class FindProductListRequest {
 
     FindProductListCommand toCommand() {
         return FindProductListCommand.builder()
-            .keyword(keyword)
+            .keyword(keyword.trim())
             .sortType(ProductSortType.valueOf(sortType))
             .category(StringUtils.hasText(category) ? Category.valueOf(category) : Category.TOTAL)
             .page(page)

@@ -1,5 +1,8 @@
 package com.product.product.application.service.register_product;
 
+import static com.product.global.exception.ErrorCode.Business_ES_PRODUCT_SAVE;
+
+import com.product.global.exception.CustomBusinessException;
 import com.product.global.util.JwtUtil;
 import com.product.global.util.SnowflakeGenerator;
 import com.product.product.application.port.in.RegisterProductUseCase;
@@ -38,7 +41,7 @@ class RegisterProductService implements RegisterProductUseCase {
             registerProductEsPort.register(savedProduct);
         } catch (Exception e) {
             deleteProductPort.deleteById(savedProduct.getProductId());
-            throw new RuntimeException(e);
+            throw new CustomBusinessException(Business_ES_PRODUCT_SAVE);
         }
 
         return RegisterProductServiceResponse.builder()

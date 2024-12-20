@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Getter
 @NoArgsConstructor
 @Document(indexName = "product")
-public class ProductEsDocument {
+class ProductEsDocument {
 
     @Id
     private Long productId;
@@ -48,7 +48,7 @@ public class ProductEsDocument {
     private String regDateTime;
 
     @Builder
-    public ProductEsDocument(Long productId, String productName, String description,
+    ProductEsDocument(Long productId, String productName, String description,
         String sellerEmail, String productImg, long price, long salesCount, long reviewCount,
         double totalScore, Category category, String regDateTime) {
         this.productId = productId;

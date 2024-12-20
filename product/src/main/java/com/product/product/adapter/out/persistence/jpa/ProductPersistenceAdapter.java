@@ -56,4 +56,10 @@ class ProductPersistenceAdapter implements FindProductPort,
             productShard2Adapter.deleteById(productId);
         }
     }
+
+    @Override // for test
+    public void deleteAll() {
+        productShard1Adapter.deleteAll();
+        productShard2Adapter.deleteAll();
+    }
 }

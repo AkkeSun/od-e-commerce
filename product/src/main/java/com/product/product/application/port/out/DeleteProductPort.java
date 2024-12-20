@@ -4,4 +4,5 @@ public interface DeleteProductPort {
 
     void deleteById(Long productId);
 
+    void deleteAll();
 }
