@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = CategoryValidator.class)
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Category {
+public @interface ValidCategory {
 
     String message() default "존재하지 않은 카테고리 입니다";
 

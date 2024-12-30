@@ -1,10 +1,10 @@
 package com.product.global.validation.validator;
 
-import com.product.global.validation.Category;
+import com.product.global.validation.ValidCategory;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class CategoryValidator implements ConstraintValidator<Category, String> {
+public class CategoryValidator implements ConstraintValidator<ValidCategory, String> {
 
     @Override
     public boolean isValid(String input, ConstraintValidatorContext context) {
