@@ -19,7 +19,7 @@ class UpdateProductQuantityRequestTest {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
                 .productCount(50)
-                .isSale(true)
+                .isPurchased(true)
                 .build();
             Long productId = 12345L;
             String authorization = "testToken";
@@ -31,7 +31,7 @@ class UpdateProductQuantityRequestTest {
             assertThat(command.productId()).isEqualTo(productId);
             assertThat(command.authorization()).isEqualTo(authorization);
             assertThat(command.productCount()).isEqualTo(request.getProductCount());
-            assertThat(command.isSale()).isEqualTo(request.getIsSale());
+            assertThat(command.isPurchased()).isEqualTo(request.getIsPurchased());
         }
     }
 }

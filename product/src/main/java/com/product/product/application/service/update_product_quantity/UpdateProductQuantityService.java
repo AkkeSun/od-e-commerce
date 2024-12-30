@@ -37,7 +37,7 @@ class UpdateProductQuantityService implements UpdateProductSalesUseCase {
 
         Product product = findProductPort.findById(command.productId());
 
-        if (command.isSale()) {
+        if (command.isPurchased()) {
             if (!product.isAvailableForSale(command.productCount())) {
                 throw new CustomBusinessException(Business_OUT_OF_STOCK);
             }

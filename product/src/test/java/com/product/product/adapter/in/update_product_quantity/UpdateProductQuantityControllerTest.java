@@ -36,7 +36,7 @@ class UpdateProductQuantityControllerTest extends ControllerTestSupport {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
                 .productCount(10)
-                .isSale(true)
+                .isPurchased(true)
                 .build();
             String authorization = "testToken";
             String productId = "10";
@@ -104,7 +104,7 @@ class UpdateProductQuantityControllerTest extends ControllerTestSupport {
         void error2() throws Exception {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
-                .isSale(true)
+                .isPurchased(true)
                 .build();
             String authorization = "testToken";
             String productId = "10";
@@ -134,7 +134,7 @@ class UpdateProductQuantityControllerTest extends ControllerTestSupport {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
                 .productCount(-1)
-                .isSale(true)
+                .isPurchased(true)
                 .build();
             String authorization = "testToken";
             String productId = "10";

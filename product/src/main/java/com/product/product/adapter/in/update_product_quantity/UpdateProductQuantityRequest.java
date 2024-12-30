@@ -16,19 +16,19 @@ class UpdateProductQuantityRequest {
     @Min(value = 1, message = "상품 수량은 1 이상 이어야 합니다", groups = SizeGroups.class)
     private int productCount;
 
-    @NotNull(message = "판매 여부는 필수값 입니다", groups = NotBlankGroups.class)
-    private Boolean isSale;
+    @NotNull(message = "구매 여부는 필수값 입니다", groups = NotBlankGroups.class)
+    private Boolean isPurchased;
 
     @Builder
-    public UpdateProductQuantityRequest(int productCount, Boolean isSale) {
+    public UpdateProductQuantityRequest(int productCount, Boolean isPurchased) {
         this.productCount = productCount;
-        this.isSale = isSale;
+        this.isPurchased = isPurchased;
     }
 
     UpdateProductSalesCommand toCommand(Long productId, String authorization) {
         return UpdateProductSalesCommand.builder()
             .productCount(productCount)
-            .isSale(isSale)
+            .isPurchased(isPurchased)
             .productId(productId)
             .authorization(authorization)
             .build();

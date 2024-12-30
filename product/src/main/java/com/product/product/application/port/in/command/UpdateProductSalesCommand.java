@@ -6,7 +6,7 @@ import lombok.Builder;
 public record UpdateProductSalesCommand(
     Long productId,
     Integer productCount,
-    boolean isSale,
+    boolean isPurchased,
     String authorization
 ) {
 
