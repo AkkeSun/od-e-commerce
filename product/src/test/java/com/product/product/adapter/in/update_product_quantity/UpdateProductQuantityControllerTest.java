@@ -182,7 +182,7 @@ class UpdateProductQuantityControllerTest extends ControllerTestSupport {
                 .andExpect(jsonPath("$.message").value("BAD_REQUEST"))
                 .andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.data.errorCode").value(1001))
-                .andExpect(jsonPath("$.data.errorMessage").value("판매 여부는 필수값 입니다"))
+                .andExpect(jsonPath("$.data.errorMessage").value("구매 여부는 필수값 입니다"))
                 .andDo(print());
         }
     }

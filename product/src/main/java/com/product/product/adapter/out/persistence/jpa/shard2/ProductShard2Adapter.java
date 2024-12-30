@@ -62,7 +62,7 @@ public class ProductShard2Adapter implements RegisterProductPort, FindProductPor
             .productId(product.getProductId())
             .type(HistoryType.QUANTITY)
             .detailInfo("+" + quantity)
-            .regDate(LocalDateTime.now().toString())
+            .regDate(dateUtil.getCurrentDate())
             .regDateTime(LocalDateTime.now())
             .build());
         return product;

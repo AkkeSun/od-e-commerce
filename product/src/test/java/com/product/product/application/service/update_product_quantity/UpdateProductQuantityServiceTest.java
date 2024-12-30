@@ -3,6 +3,9 @@ package com.product.product.application.service.update_product_quantity;
 import static com.product.global.exception.ErrorCode.Business_OUT_OF_STOCK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import com.product.IntegrationTestSupport;
 import com.product.global.exception.CustomAuthorizationException;
@@ -11,17 +14,19 @@ import com.product.global.exception.ErrorCode;
 import com.product.product.application.port.in.command.UpdateProductSalesCommand;
 import com.product.product.application.port.out.DeleteProductPort;
 import com.product.product.application.port.out.FindProductPort;
+import com.product.product.application.port.out.ProduceProductPort;
 import com.product.product.application.port.out.RegisterProductPort;
 import com.product.product.domain.Category;
 import com.product.product.domain.Product;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
 
@@ -33,8 +38,11 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
     private DeleteProductPort deleteProductPort;
     @Autowired
     private FindProductPort findProductPort;
+    @MockBean
+    private ProduceProductPort produceProductPort;
 
     @BeforeEach
+    @AfterEach
     void setUp() {
         deleteProductPort.deleteAll();
     }
@@ -83,7 +91,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
 
         @Test
         @DisplayName("[success] 상품 구매이며 현재 상품수와 구매하고자 하는 상품수를 뺀 값이 10 이상이면 상품수를 변경하고 카프카 메시지를 발송한다.")
-        void success1(CapturedOutput output) {
+        void success1() {
             // given
             Product product = registerProductPort.register(Product.builder()
                 .productId(snowflakeGenerator.nextId())
@@ -118,12 +126,12 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
             // then
             assertThat(result.result()).isEqualTo("Y");
             assertThat(updatedProduct.getQuantity()).isEqualTo(10);
-            assertThat(output.toString().contains("[product-update-sales-topic] ==> ")).isTrue();
+            verify(produceProductPort, times(1)).sendMessage(any(), any());
         }
 
         @Test
         @DisplayName("[error] 상품 수량 추가이며 판매자의 아이디와 토큰 사용자의 아이디가 다른 경우 예외를 응답한다.")
-        void error2(CapturedOutput output) {
+        void error2() {
             // given
             Product product = registerProductPort.register(Product.builder()
                 .productId(snowflakeGenerator.nextId())

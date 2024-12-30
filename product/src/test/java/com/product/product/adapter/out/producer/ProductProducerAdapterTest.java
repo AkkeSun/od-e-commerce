@@ -8,7 +8,14 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 
+@EmbeddedKafka(partitions = 1,
+    brokerProperties = {
+        "listeners=PLAINTEXT://localhost:9092",
+    },
+    ports = {9092}
+)
 class ProductProducerAdapterTest extends IntegrationTestSupport {
 
     @Autowired

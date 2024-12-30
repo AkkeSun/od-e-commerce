@@ -588,7 +588,7 @@ class RegisterProductControllerTest extends ControllerTestSupport {
                 .andExpect(jsonPath("$.message").value("BAD_REQUEST"))
                 .andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.data.errorCode").value(1001))
-                .andExpect(jsonPath("$.data.errorMessage").value("유효한 카테고리가 아닙니다"))
+                .andExpect(jsonPath("$.data.errorMessage").value("존재하지 않은 카테고리 입니다"))
                 .andDo(print());
         }
 
@@ -632,7 +632,7 @@ class RegisterProductControllerTest extends ControllerTestSupport {
         void error17() throws Exception {
             // given
             RegisterProductRequest request = RegisterProductRequest.builder()
-                .productName("상품명오류상품명오류상품명오류상품명오류상품명오류상품명오류상품명오류상품명오류상품명오류상품명오류")
+                .productName("상품명오류".repeat(11))
                 .productImg("이미지")
                 .description("상품 설명")
                 .productOption(List.of("옵션1", "옵션2"))
