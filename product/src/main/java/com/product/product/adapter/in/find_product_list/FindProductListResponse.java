@@ -1,7 +1,6 @@
 package com.product.product.adapter.in.find_product_list;
 
 import com.product.product.application.service.find_product_list.FindProductListServiceResponse;
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +15,11 @@ class FindProductListResponse {
     private String category;
     private String productImg;
     private String sellerEmail;
-    private LocalDateTime regDateTime;
+    private String regDateTime;
 
     @Builder
     FindProductListResponse(Long productId, String productName, long price, String category,
-        String productImg, String sellerEmail, LocalDateTime regDateTime) {
+        String productImg, String sellerEmail, String regDateTime) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;

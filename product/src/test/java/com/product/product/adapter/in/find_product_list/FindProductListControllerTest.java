@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.product.ControllerTestSupport;
 import com.product.product.application.service.find_product_list.FindProductListServiceResponse;
 import com.product.product.domain.Category;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +47,7 @@ class FindProductListControllerTest extends ControllerTestSupport {
                     .sellerEmail("od@gmail.com")
                     .category(Category.FASHION)
                     .price(10000)
-                    .regDateTime(LocalDateTime.now())
+                    .regDateTime("2024-12-31 12:00:00")
                     .build(),
                 FindProductListServiceResponse.builder()
                     .productId(4L)
@@ -57,7 +56,7 @@ class FindProductListControllerTest extends ControllerTestSupport {
                     .sellerEmail("exg@gmail.com")
                     .category(Category.FASHION)
                     .price(20000)
-                    .regDateTime(LocalDateTime.now())
+                    .regDateTime("2024-12-31 12:00:00")
                     .build()
             );
             given(findProductListUseCase.findProductList(any())).willReturn(response);

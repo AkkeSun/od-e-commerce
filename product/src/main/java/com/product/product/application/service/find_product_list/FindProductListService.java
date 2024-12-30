@@ -10,6 +10,7 @@ import com.product.product.application.port.out.FindProductEsPort;
 import com.product.product.application.port.out.FindProductVectorPort;
 import com.product.product.application.port.out.ProduceProductPort;
 import com.product.product.domain.Product;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,7 +71,8 @@ class FindProductListService implements FindProductListUseCase {
                 .productImg(product.getProductImg())
                 .category(product.getCategory())
                 .sellerEmail(product.getSellerEmail())
-                .regDateTime(product.getRegDateTime())
+                .regDateTime(product.getRegDateTime()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build())
             .toList();
     }

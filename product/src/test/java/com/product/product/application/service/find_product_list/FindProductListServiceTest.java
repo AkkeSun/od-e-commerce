@@ -83,7 +83,7 @@ class FindProductListServiceTest extends IntegrationTestSupport {
                     .category(Category.BEAUTY)
                     .productImg("test.jpg")
                     .sellerEmail("od@gmai.com")
-                    .regDateTime(LocalDateTime.now())
+                    .regDateTime("2024-12-31 12:00:00")
                     .build());
             }
 

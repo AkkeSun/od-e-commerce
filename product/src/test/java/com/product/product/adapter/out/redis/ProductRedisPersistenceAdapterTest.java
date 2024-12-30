@@ -7,7 +7,6 @@ import com.product.product.application.port.in.command.FindProductListCommand;
 import com.product.product.application.service.find_product_list.FindProductListServiceResponse;
 import com.product.product.domain.Category;
 import com.product.product.domain.ProductSortType;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +44,7 @@ class ProductRedisPersistenceAdapterTest extends IntegrationTestSupport {
                 .category(Category.TOTAL)
                 .productImg("test.jpg")
                 .sellerEmail("od@gmai.com")
-                .regDateTime(LocalDateTime.now())
+                .regDateTime("2024-12-31 12:00:00")
                 .build();
             List<FindProductListServiceResponse> cacheList = new ArrayList<>();
             cacheList.add(cacheItem);

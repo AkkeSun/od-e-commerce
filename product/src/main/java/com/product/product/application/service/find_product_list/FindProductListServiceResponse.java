@@ -1,7 +1,6 @@
 package com.product.product.application.service.find_product_list;
 
 import com.product.product.domain.Category;
-import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
@@ -12,7 +11,7 @@ public record FindProductListServiceResponse(
     Category category,
     String productImg,
     String sellerEmail,
-    LocalDateTime regDateTime
+    String regDateTime
 ) {
 
 }
