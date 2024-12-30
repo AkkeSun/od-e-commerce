@@ -84,6 +84,19 @@ public class ExceptionAdvice {
     }
 
     @ExceptionHandlerLog
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(CustomAuthorizationException.class)
+    ApiResponse<Object> customAuthenticationException(CustomAuthorizationException e) {
+        return ApiResponse.of(
+            HttpStatus.FORBIDDEN,
+            ErrorResponse.builder()
+                .errorCode(e.getErrorCode().getCode())
+                .errorMessage(e.getErrorCode().getMessage())
+                .build()
+        );
+    }
+
+    @ExceptionHandlerLog
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(CustomBusinessException.class)
     ApiResponse<Object> notFoundException(CustomBusinessException e) {
