@@ -8,8 +8,8 @@ import com.product.global.exception.CustomBusinessException;
 import com.product.global.exception.ErrorCode;
 import com.product.global.util.JsonUtil;
 import com.product.global.util.JwtUtil;
-import com.product.product.application.port.in.UpdateProductSalesUseCase;
-import com.product.product.application.port.in.command.UpdateProductSalesCommand;
+import com.product.product.application.port.in.UpdateProductQuantityUseCase;
+import com.product.product.application.port.in.command.UpdateProductQuantityCommand;
 import com.product.product.application.port.out.FindProductPort;
 import com.product.product.application.port.out.ProduceProductPort;
 import com.product.product.application.port.out.UpdateProductPort;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-class UpdateProductQuantityService implements UpdateProductSalesUseCase {
+class UpdateProductQuantityService implements UpdateProductQuantityUseCase {
 
     private final JwtUtil jwtUtil;
     private final JsonUtil jsonUtil;
@@ -31,7 +31,7 @@ class UpdateProductQuantityService implements UpdateProductSalesUseCase {
     @Override
     @DistributedLock(key = "updateProductQuantity")
     public UpdateProductQuantityServiceResponse updateProductQuantity(
-        UpdateProductSalesCommand command) {
+        UpdateProductQuantityCommand command) {
         Claims claims = jwtUtil.getClaims(command.authorization());
         Long accountId = claims.get("accountId", Long.class);
 

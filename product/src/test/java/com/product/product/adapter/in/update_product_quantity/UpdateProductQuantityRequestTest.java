@@ -2,7 +2,7 @@ package com.product.product.adapter.in.update_product_quantity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.product.product.application.port.in.command.UpdateProductSalesCommand;
+import com.product.product.application.port.in.command.UpdateProductQuantityCommand;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class UpdateProductQuantityRequestTest {
             String authorization = "testToken";
 
             // when
-            UpdateProductSalesCommand command = request.toCommand(productId, authorization);
+            UpdateProductQuantityCommand command = request.toCommand(productId, authorization);
 
             // then
             assertThat(command.productId()).isEqualTo(productId);

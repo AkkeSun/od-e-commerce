@@ -2,7 +2,7 @@ package com.product.product.adapter.in.update_product_quantity;
 
 import com.product.global.response.ApiResponse;
 import com.product.global.validation.groups.ValidationSequence;
-import com.product.product.application.port.in.UpdateProductSalesUseCase;
+import com.product.product.application.port.in.UpdateProductQuantityUseCase;
 import com.product.product.application.service.update_product_quantity.UpdateProductQuantityServiceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 class UpdateProductQuantityController {
 
-    private final UpdateProductSalesUseCase updateProductSalesUseCase;
+    private final UpdateProductQuantityUseCase updateProductSalesUseCase;
 
     @PutMapping("/products/{productId}/quantity")
     ApiResponse<UpdateProductQuantityResponse> updateProductQuantity(

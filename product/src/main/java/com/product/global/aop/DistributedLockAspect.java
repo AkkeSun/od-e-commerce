@@ -1,6 +1,6 @@
 package com.product.global.aop;
 
-import com.product.product.application.port.in.command.UpdateProductSalesCommand;
+import com.product.product.application.port.in.command.UpdateProductQuantityCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -24,7 +24,7 @@ public class DistributedLockAspect {
 
     @Around("@annotation(distributedLock) && args(command)")
     public Object lock(final ProceedingJoinPoint joinPoint, DistributedLock distributedLock,
-        UpdateProductSalesCommand command)
+        UpdateProductQuantityCommand command)
         throws Throwable {
 
         String key = REDISSON_LOCK_PREFIX + distributedLock.key() + command.productId();
