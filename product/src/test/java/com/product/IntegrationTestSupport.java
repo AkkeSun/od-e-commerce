@@ -3,6 +3,7 @@ package com.product;
 import com.product.global.util.AesUtil;
 import com.product.global.util.JsonUtil;
 import com.product.global.util.JwtUtil;
+import com.product.global.util.SnowflakeGenerator;
 import com.product.product.application.port.out.FindProductEsPort;
 import com.product.product.application.port.out.FindProductPort;
 import com.product.product.application.port.out.ResetProductEsIndex;
@@ -62,6 +63,9 @@ public class IntegrationTestSupport {
 
     @Autowired
     protected ResetProductEsIndex resetProductEsIndex;
+
+    @Autowired
+    protected SnowflakeGenerator snowflakeGenerator;
 
     @Value("${jwt.token.secret-key}")
     private String secretKey;
