@@ -11,7 +11,7 @@ import com.product.IntegrationTestSupport;
 import com.product.global.exception.CustomAuthorizationException;
 import com.product.global.exception.CustomBusinessException;
 import com.product.global.exception.ErrorCode;
-import com.product.product.application.port.in.command.UpdateProductSalesCommand;
+import com.product.product.application.port.in.command.UpdateProductQuantityCommand;
 import com.product.product.application.port.out.DeleteProductPort;
 import com.product.product.application.port.out.FindProductPort;
 import com.product.product.application.port.out.ProduceProductPort;
@@ -52,7 +52,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
     class Describe_updateProductQuantity {
 
         @Test
-        @DisplayName("[error] 상품 구매이며 현재 상품수와 구매하고자 하는 상품수를 뺀 값이 10 미만이면 예외를 응답한다.")
+        @DisplayName("[error] 상품 구매이며 현재 상품수와 구매하고자 하는 상품수를 뺀 값이 0 미만이면 예외를 응답한다.")
         void error1() {
             // given
             Product product = registerProductPort.register(Product.builder()
@@ -74,10 +74,10 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
                 .regDate("20210801")
                 .regDateTime(LocalDateTime.now())
                 .build());
-            UpdateProductSalesCommand command = UpdateProductSalesCommand.builder()
+            UpdateProductQuantityCommand command = UpdateProductQuantityCommand.builder()
                 .authorization(createAccessToken("ROLE_CUSTOMER"))
                 .productId(product.getProductId())
-                .productCount(2)
+                .productCount(12)
                 .isPurchased(true)
                 .build();
 
@@ -90,7 +90,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
         }
 
         @Test
-        @DisplayName("[success] 상품 구매이며 현재 상품수와 구매하고자 하는 상품수를 뺀 값이 10 이상이면 상품수를 변경하고 카프카 메시지를 발송한다.")
+        @DisplayName("[success] 상품 구매이며 현재 상품수와 구매하고자 하는 상품수를 뺀 값이 0 이상이면 상품수를 변경하고 카프카 메시지를 발송한다.")
         void success1() {
             // given
             Product product = registerProductPort.register(Product.builder()
@@ -112,10 +112,10 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
                 .regDate("20210801")
                 .regDateTime(LocalDateTime.now())
                 .build());
-            UpdateProductSalesCommand command = UpdateProductSalesCommand.builder()
+            UpdateProductQuantityCommand command = UpdateProductQuantityCommand.builder()
                 .authorization(createAccessToken("ROLE_CUSTOMER"))
                 .productId(product.getProductId())
-                .productCount(1)
+                .productCount(11)
                 .isPurchased(true)
                 .build();
 
@@ -125,7 +125,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
 
             // then
             assertThat(result.result()).isEqualTo("Y");
-            assertThat(updatedProduct.getQuantity()).isEqualTo(10);
+            assertThat(updatedProduct.getQuantity()).isEqualTo(0);
             verify(produceProductPort, times(1)).sendMessage(any(), any());
         }
 
@@ -152,7 +152,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
                 .regDate("20210801")
                 .regDateTime(LocalDateTime.now())
                 .build());
-            UpdateProductSalesCommand command = UpdateProductSalesCommand.builder()
+            UpdateProductQuantityCommand command = UpdateProductQuantityCommand.builder()
                 .authorization(createAccessToken("ROLE_SELLER"))
                 .productId(product.getProductId())
                 .productCount(1)
@@ -190,7 +190,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
                 .regDate("20210801")
                 .regDateTime(LocalDateTime.now())
                 .build());
-            UpdateProductSalesCommand command = UpdateProductSalesCommand.builder()
+            UpdateProductQuantityCommand command = UpdateProductQuantityCommand.builder()
                 .authorization(createAccessToken("ROLE_SELLER"))
                 .productId(product.getProductId())
                 .productCount(1)
