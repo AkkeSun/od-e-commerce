@@ -76,5 +76,6 @@ public class ProductShard2Adapter implements RegisterProductPort, FindProductPor
     @Override
     public void deleteAll() {
         productRepository.deleteAll();
+        productHistoryRepository.deleteAll();
     }
 }
