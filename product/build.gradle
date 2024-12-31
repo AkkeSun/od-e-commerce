@@ -88,7 +88,7 @@ swaggerSources {
 // ./gradlew openapi3 copyOasToSwagger
 openapi3 {
     servers = [
-            { url = "http://localhost:8081" }
+            { url = "http://localhost:8082" }
     ]
     title = "Product API"
     description = "상품 정보를 관리하는 API 입니다"

@@ -67,6 +67,7 @@ services:
       - URLS_PRIMARY_NAME=chameleon
       - "URLS=[ 
                 { url: 'http://localhost:8081/docs/account-api.yaml', name: 'account' },
+                { url: 'http://localhost:8082/docs/product-api.yaml', name: 'product' },
             ]"
     ports:
       - "7963:8080"
