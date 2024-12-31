@@ -25,6 +25,9 @@ class ProductHistoryShard1Entity {
     @Column(name = "PRODUCT_ID")
     private Long productId;
 
+    @Column(name = "ACCOUNT_ID")
+    private Long accountId;
+
     @Column(name = "TYPE")
     @Enumerated(EnumType.STRING)
     private HistoryType type;
@@ -39,10 +42,11 @@ class ProductHistoryShard1Entity {
     private LocalDateTime regDateTime;
 
     @Builder
-    ProductHistoryShard1Entity(long id, Long productId, HistoryType type, String detailInfo,
-        String regDate, LocalDateTime regDateTime) {
+    ProductHistoryShard1Entity(long id, Long productId, Long accountId, HistoryType type,
+        String detailInfo, String regDate, LocalDateTime regDateTime) {
         this.id = id;
         this.productId = productId;
+        this.accountId = accountId;
         this.type = type;
         this.detailInfo = detailInfo;
         this.regDate = regDate;

@@ -46,8 +46,9 @@ public class ProductShard2Adapter implements RegisterProductPort, FindProductPor
         productHistoryRepository.save(ProductHistoryShard2Entity.builder()
             .id(snowflakeGenerator.nextId())
             .productId(product.getProductId())
+            .accountId(accountId)
             .type(HistoryType.SALES_COUNT)
-            .detailInfo("accountId: " + accountId + ", count : " + productCount)
+            .detailInfo(productCount + "")
             .regDate(dateUtil.getCurrentDate())
             .regDateTime(LocalDateTime.now())
             .build());
