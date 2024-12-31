@@ -45,7 +45,7 @@ class DeleteAccountDocsTest extends RestDocsSupport {
 
         private String tag = "Account";
         private String summary = "사용자 정보 삭제 API";
-        private String description = "사용자를 삭제하는 API 입니다. <br>"
+        private String description = "사용자를 삭제하는 API 입니다. <br><br>"
             + "테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다. <br>"
             + "(요청 헤더에 인증 토큰을 입력하여 테스트하지 않습니다)";
 
