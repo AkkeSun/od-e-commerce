@@ -313,6 +313,17 @@ paths:
                     "userTel" : "01012345678",
                     "address" : "서울시 강남구"
                   }
+              '[registerAccount] 이메일 미입력':
+                value: |-
+                  {
+                    "email" : "",
+                    "password" : "1234",
+                    "passwordCheck" : "1234",
+                    "role" : "ROLE_CUSTOMER",
+                    "username" : "od",
+                    "userTel" : "01012345678",
+                    "address" : "서울시 강남구"
+                  }
       responses:
         "400":
           description: "400"
@@ -381,6 +392,16 @@ paths:
                         "errorMessage" : "비밀번호 확인은 필수값 입니다."
                       }
                     }
+                '[registerAccount] 이메일 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1001,
+                        "errorMessage" : "이메일은 필수값 입니다."
+                      }
+                    }
         "200":
           description: "200"
           content:
@@ -402,8 +423,8 @@ paths:
       tags:
       - Account
       summary: 사용자 정보 삭제 API
-      description: 사용자를 삭제하는 API 입니다. <br>테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가
-        가능합니다. <br>(요청 헤더에 인증 토큰을 입력하여 테스트하지 않습니다)
+      description: 사용자를 삭제하는 API 입니다. <br><br>테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상
+        테스트가 가능합니다. <br>(요청 헤더에 인증 토큰을 입력하여 테스트하지 않습니다)
       operationId: "[deleteAccount] "
       parameters:
       - name: Authorization
@@ -466,88 +487,46 @@ paths:
                         "result" : "Y"
                       }
                     }
-  /accounts/refresh-token:
-    post:
+  /accounts/{id}:
+    get:
       tags:
-      - Token
-      summary: 인증 토큰 갱신 API
-      description: 리프래시 토큰으로 인증 토큰을 갱신하는 API 입니다. <br>리프레시 토큰을 발급받은 기기와 다른 기기에서 시도하거
-        리프레시토큰이 만료된 경우 갱신에 실패합니다.
-      operationId: "[registerTokenByRefresh] "
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/[REQUEST] register-token-by-refresh"
-            examples:
-              '[registerTokenByRefresh] 리프레시 토큰 미입력':
-                value: |-
-                  {
-                    "refreshToken" : ""
-                  }
-              '[registerTokenByRefresh] SUCCESS':
-                value: |-
-                  {
-                    "refreshToken" : "valid-refresh-token"
-                  }
-              '[registerTokenByRefresh] 유효하지 않은 리프레시 토큰 입력':
-                value: |-
-                  {
-                    "refreshToken" : "invalid-refresh-token"
-                  }
+      - Account
+      summary: 사용자 정보 조회 API
+      description: 인증토큰으로 사용자 정보를 조회하는 API 입니다.
+      operationId: "[FindAccountInfo] 토큰 정보와 사용자 정보 불일치"
+      parameters:
+      - name: id
+        in: path
+        description: ""
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: 인증 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer test-success-token
       responses:
-        "400":
-          description: "400"
+        "403":
+          description: "403"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/[RESPONSE] ERROR"
               examples:
-                '[registerTokenByRefresh] 리프레시 토큰 미입력':
+                '[FindAccountInfo] 토큰 정보와 사용자 정보 불일치':
                   value: |-
                     {
-                      "httpStatus" : 400,
-                      "message" : "BAD_REQUEST",
+                      "httpStatus" : 403,
+                      "message" : "FORBIDDEN",
                       "data" : {
-                        "errorCode" : 1001,
-                        "errorMessage" : "리프레시 토큰은 필수값 입니다."
+                        "errorCode" : 4001,
+                        "errorMessage" : "접근 권한이 없습니다"
                       }
                     }
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[RESPONSE] register-token"
-              examples:
-                '[registerTokenByRefresh] SUCCESS':
-                  value: |-
-                    {
-                      "httpStatus" : 200,
-                      "message" : "OK",
-                      "data" : {
-                        "accessToken" : "new-access-token",
-                        "refreshToken" : "new-refresh-token"
-                      }
-                    }
-        "401":
-          description: "401"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/[RESPONSE] ERROR"
-              examples:
-                '[registerTokenByRefresh] 유효하지 않은 리프레시 토큰 입력':
-                  value: |-
-                    {
-                      "httpStatus" : 401,
-                      "message" : "UNAUTHORIZED",
-                      "data" : {
-                        "errorCode" : 3002,
-                        "errorMessage" : "유효한 리프레시 토큰이 아닙니다"
-                      }
-                    }
-  /accounts/token:
+  /auth/login:
     post:
       tags:
       - Token
@@ -644,6 +623,87 @@ paths:
                       "data" : {
                         "errorCode" : 2001,
                         "errorMessage" : "조회된 사용자 정보가 없습니다"
+                      }
+                    }
+  /auth/refresh:
+    post:
+      tags:
+      - Token
+      summary: 인증 토큰 갱신 API
+      description: 리프래시 토큰으로 인증 토큰을 갱신하는 API 입니다. <br>리프레시 토큰을 발급받은 기기와 다른 기기에서 시도하거
+        리프레시토큰이 만료된 경우 갱신에 실패합니다.
+      operationId: "[registerTokenByRefresh] "
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/[REQUEST] register-token-by-refresh"
+            examples:
+              '[registerTokenByRefresh] 리프레시 토큰 미입력':
+                value: |-
+                  {
+                    "refreshToken" : ""
+                  }
+              '[registerTokenByRefresh] SUCCESS':
+                value: |-
+                  {
+                    "refreshToken" : "valid-refresh-token"
+                  }
+              '[registerTokenByRefresh] 유효하지 않은 리프레시 토큰 입력':
+                value: |-
+                  {
+                    "refreshToken" : "invalid-refresh-token"
+                  }
+      responses:
+        "400":
+          description: "400"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[RESPONSE] ERROR"
+              examples:
+                '[registerTokenByRefresh] 리프레시 토큰 미입력':
+                  value: |-
+                    {
+                      "httpStatus" : 400,
+                      "message" : "BAD_REQUEST",
+                      "data" : {
+                        "errorCode" : 1001,
+                        "errorMessage" : "리프레시 토큰은 필수값 입니다."
+                      }
+                    }
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[RESPONSE] register-token"
+              examples:
+                '[registerTokenByRefresh] SUCCESS':
+                  value: |-
+                    {
+                      "httpStatus" : 200,
+                      "message" : "OK",
+                      "data" : {
+                        "accessToken" : "new-access-token",
+                        "refreshToken" : "new-refresh-token"
+                      }
+                    }
+        "401":
+          description: "401"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/[RESPONSE] ERROR"
+              examples:
+                '[registerTokenByRefresh] 유효하지 않은 리프레시 토큰 입력':
+                  value: |-
+                    {
+                      "httpStatus" : 401,
+                      "message" : "UNAUTHORIZED",
+                      "data" : {
+                        "errorCode" : 3002,
+                        "errorMessage" : "유효한 리프레시 토큰이 아닙니다"
                       }
                     }
 components:
