@@ -8,6 +8,7 @@ import com.product.product.application.port.out.FindProductPort;
 import com.product.product.application.port.out.RegisterProductPort;
 import com.product.product.application.port.out.UpdateProductPort;
 import com.product.product.domain.Product;
+import com.product.product.domain.ProductHistory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,13 @@ class ProductPersistenceAdapter implements FindProductPort,
     public Product findById(Long id) {
         return shardKeyUtil.isShard1(id) ?
             productShard1Adapter.findById(id) : productShard2Adapter.findById(id);
+    }
+
+    @Override
+    public ProductHistory findHistoryByProductIdAndAccountId(Long productId, Long accountId) {
+        return shardKeyUtil.isShard1(productId) ?
+            productShard1Adapter.findHistoryByProductIdAndAccountId(productId, accountId) :
+            productShard2Adapter.findHistoryByProductIdAndAccountId(productId, accountId);
     }
 
     @Override

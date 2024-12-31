@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 interface ProductHistoryShard1Repository extends
     JpaRepository<ProductHistoryShard1Entity, Long> {
 
+    ProductHistoryShard1Entity findByProductIdAndAccountId(Long productId, Long accountId);
 }

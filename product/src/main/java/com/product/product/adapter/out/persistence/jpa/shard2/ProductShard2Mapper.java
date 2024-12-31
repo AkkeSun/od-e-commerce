@@ -2,6 +2,7 @@ package com.product.product.adapter.out.persistence.jpa.shard2;
 
 import com.product.global.util.JsonUtil;
 import com.product.product.domain.Product;
+import com.product.product.domain.ProductHistory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -52,6 +53,18 @@ class ProductShard2Mapper {
             .reviewScore(entity.getReviewScore())
             .category(entity.getCategory())
             .embeddingYn(entity.getEmbeddingYn())
+            .regDate(entity.getRegDate())
+            .regDateTime(entity.getRegDateTime())
+            .build();
+    }
+
+    ProductHistory toDomain(ProductHistoryShard2Entity entity) {
+        return ProductHistory.builder()
+            .id(entity.getId())
+            .productId(entity.getProductId())
+            .accountId(entity.getAccountId())
+            .type(entity.getType())
+            .detailInfo(entity.getDetailInfo())
             .regDate(entity.getRegDate())
             .regDateTime(entity.getRegDateTime())
             .build();

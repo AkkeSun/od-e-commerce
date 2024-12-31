@@ -10,6 +10,7 @@ import com.product.product.application.port.out.RegisterProductPort;
 import com.product.product.application.port.out.UpdateProductPort;
 import com.product.product.domain.HistoryType;
 import com.product.product.domain.Product;
+import com.product.product.domain.ProductHistory;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,14 @@ public class ProductShard2Adapter implements RegisterProductPort, FindProductPor
         ProductShard2Entity entity = productRepository.findById(id)
             .orElseThrow(() -> new CustomNotFoundException(ErrorCode.DoesNotExist_PROUCT_INFO));
         return productMapper.toDomain(entity);
+    }
+
+    @Override
+    public ProductHistory findHistoryByProductIdAndAccountId(Long productId, Long accountId) {
+        ProductHistoryShard2Entity entity = productHistoryRepository
+            .findByProductIdAndAccountId(productId, accountId);
+
+        return entity == null ? null : productMapper.toDomain(entity);
     }
 
     @Override
