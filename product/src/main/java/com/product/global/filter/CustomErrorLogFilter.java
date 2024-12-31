@@ -58,8 +58,10 @@ public class CustomErrorLogFilter extends OncePerRequestFilter {
             requestInfo.put("param", requestParam);
             requestInfo.put("body", requestBody);
 
-            log.info("[{} {}] request - {}", method, uri, requestInfo);
-            log.info("[{} {}] response - {}", method, uri, responseBody);
+            if (!request.getRequestURI().contains("/docs")) {
+                log.info("[{} {}] request - {}", method, uri, requestInfo);
+                log.info("[{} {}] response - {}", method, uri, responseBody);
+            }
         }
         wrappedResponse.copyBodyToResponse();
     }
