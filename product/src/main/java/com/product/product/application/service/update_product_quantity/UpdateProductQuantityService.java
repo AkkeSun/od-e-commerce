@@ -14,6 +14,7 @@ import com.product.product.application.port.out.FindProductPort;
 import com.product.product.application.port.out.ProduceProductPort;
 import com.product.product.application.port.out.UpdateProductPort;
 import com.product.product.domain.Product;
+import com.product.product.domain.QuantityType;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,21 +38,27 @@ class UpdateProductQuantityService implements UpdateProductQuantityUseCase {
 
         Product product = findProductPort.findById(command.productId());
 
-        if (command.isPurchased()) {
-            if (!product.isAvailableForSale(command.productCount())) {
-                throw new CustomBusinessException(Business_OUT_OF_STOCK);
-            }
-            product.updateSaleCount(command.productCount());
-            updateProductPort.updateProductSaleInfo(product, accountId, command.productCount());
-            produceProductPort.sendMessage("product-update-sales-topic",
-                jsonUtil.toJsonString(product));
-
-        } else {
+        if (command.updateType().equals(QuantityType.ADD_QUANTITY)) {
             if (product.getSellerId() != accountId) {
                 throw new CustomAuthorizationException(ErrorCode.ACCESS_DENIED);
             }
             product.addQuantity(command.productCount());
-            updateProductPort.updateProductQuantity(product, command.productCount());
+
+        } else if (command.updateType().equals(QuantityType.PURCHASE)) {
+            if (!product.isAvailableForSale(command.productCount())) {
+                throw new CustomBusinessException(Business_OUT_OF_STOCK);
+            }
+            product.updatePurchaseCount(command.productCount());
+
+        } else {
+            product.updateRefundCount(command.productCount());
+        }
+
+        updateProductPort.updateProductQuantity(product, accountId, command);
+        //TODO; 로직 검토 필요 (환불의 경우 대응)
+        if (!command.updateType().equals(QuantityType.ADD_QUANTITY)) {
+            produceProductPort.sendMessage("product-update-quantity-topic",
+                jsonUtil.toJsonString(product));
         }
 
         return UpdateProductQuantityServiceResponse.builder()

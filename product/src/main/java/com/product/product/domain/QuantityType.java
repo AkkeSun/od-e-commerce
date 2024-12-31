@@ -1,9 +1,7 @@
 package com.product.product.domain;
 
-public enum HistoryType {
-    DELETE,
-    UPDATE_INFO,
+public enum QuantityType {
     ADD_QUANTITY,
     PURCHASE,
-    REFUND,
+    REFUND
 }

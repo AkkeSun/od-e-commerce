@@ -3,6 +3,7 @@ package com.product.product.adapter.in.update_product_quantity;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.product.product.application.port.in.command.UpdateProductQuantityCommand;
+import com.product.product.domain.QuantityType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ class UpdateProductQuantityRequestTest {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
                 .productCount(50)
-                .isPurchased(true)
+                .updateType("ADD_QUANTITY")
                 .build();
             Long productId = 12345L;
             String authorization = "testToken";
@@ -31,7 +32,7 @@ class UpdateProductQuantityRequestTest {
             assertThat(command.productId()).isEqualTo(productId);
             assertThat(command.authorization()).isEqualTo(authorization);
             assertThat(command.productCount()).isEqualTo(request.getProductCount());
-            assertThat(command.isPurchased()).isEqualTo(request.getIsPurchased());
+            assertThat(command.updateType()).isEqualTo(QuantityType.ADD_QUANTITY);
         }
     }
 }

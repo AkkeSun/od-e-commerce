@@ -19,6 +19,7 @@ import com.product.product.application.port.out.ProduceProductPort;
 import com.product.product.application.port.out.RegisterProductPort;
 import com.product.product.domain.Category;
 import com.product.product.domain.Product;
+import com.product.product.domain.QuantityType;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -81,7 +82,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
                 .authorization(createAccessToken("ROLE_CUSTOMER"))
                 .productId(product.getProductId())
                 .productCount(12)
-                .isPurchased(true)
+                .updateType(QuantityType.PURCHASE)
                 .build();
 
             // when
@@ -106,6 +107,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
                 .description("애플의 신제품 아이폰 12 입니다.")
                 .price(10000)
                 .quantity(11)
+                .salesCount(5)
                 .reviewCount(0)
                 .reviewScore(0)
                 .totalScore(0)
@@ -119,7 +121,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
                 .authorization(createAccessToken("ROLE_CUSTOMER"))
                 .productId(product.getProductId())
                 .productCount(11)
-                .isPurchased(true)
+                .updateType(QuantityType.PURCHASE)
                 .build();
 
             // when
@@ -129,8 +131,52 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
             // then
             assertThat(result.result()).isEqualTo("Y");
             assertThat(updatedProduct.getQuantity()).isEqualTo(0);
+            assertThat(updatedProduct.getSalesCount()).isEqualTo(16);
             verify(produceProductPort, times(1)).sendMessage(any(), any());
         }
+
+        @Test
+        @DisplayName("[success] 상품 환불의 경우 상품수가 변경되고 카프카 메시지를 발송하는지 확인한다.")
+        void success4() {
+            // given
+            Product product = registerProductPort.register(Product.builder()
+                .productId(snowflakeGenerator.nextId())
+                .productName("아이폰 12")
+                .sellerId(1L)
+                .sellerEmail("test@gmail.com")
+                .productImg("상품 이미지")
+                .productOption(List.of("옵션1", "옵션2"))
+                .description("애플의 신제품 아이폰 12 입니다.")
+                .price(10000)
+                .quantity(11)
+                .salesCount(5)
+                .reviewCount(0)
+                .reviewScore(0)
+                .totalScore(0)
+                .hitCount(0)
+                .embeddingYn("N")
+                .category(Category.ELECTRONICS)
+                .regDate("20210801")
+                .regDateTime(LocalDateTime.now())
+                .build());
+            UpdateProductQuantityCommand command = UpdateProductQuantityCommand.builder()
+                .authorization(createAccessToken("ROLE_CUSTOMER"))
+                .productId(product.getProductId())
+                .productCount(2)
+                .updateType(QuantityType.REFUND)
+                .build();
+
+            // when
+            UpdateProductQuantityServiceResponse result = service.updateProductQuantity(command);
+            Product updatedProduct = findProductPort.findById(product.getProductId());
+
+            // then
+            assertThat(result.result()).isEqualTo("Y");
+            assertThat(updatedProduct.getQuantity()).isEqualTo(13);
+            assertThat(updatedProduct.getSalesCount()).isEqualTo(3);
+            verify(produceProductPort, times(1)).sendMessage(any(), any());
+        }
+
 
         @Test
         @DisplayName("[error] 상품 수량 추가이며 판매자의 아이디와 토큰 사용자의 아이디가 다른 경우 예외를 응답한다.")
@@ -159,7 +205,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
                 .authorization(createAccessToken("ROLE_SELLER"))
                 .productId(product.getProductId())
                 .productCount(1)
-                .isPurchased(false)
+                .updateType(QuantityType.ADD_QUANTITY)
                 .build();
 
             // when
@@ -197,7 +243,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
                 .authorization(createAccessToken("ROLE_SELLER"))
                 .productId(product.getProductId())
                 .productCount(1)
-                .isPurchased(false)
+                .updateType(QuantityType.ADD_QUANTITY)
                 .build();
 
             // when
@@ -217,7 +263,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
                 .authorization(createAccessToken("ROLE_SELLER"))
                 .productId(12345L)
                 .productCount(1)
-                .isPurchased(false)
+                .updateType(QuantityType.ADD_QUANTITY)
                 .build();
 
             // when
@@ -255,7 +301,7 @@ class UpdateProductQuantityServiceTest extends IntegrationTestSupport {
                 .authorization(createAccessToken("ROLE_CUSTOMER"))
                 .productId(product.getProductId())
                 .productCount(1)
-                .isPurchased(true)
+                .updateType(QuantityType.PURCHASE)
                 .build();
 
             int count = 50;

@@ -36,7 +36,7 @@ class UpdateProductQuantityControllerTest extends ControllerTestSupport {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
                 .productCount(10)
-                .isPurchased(true)
+                .updateType("PURCHASE")
                 .build();
             String authorization = "testToken";
             String productId = "10";
@@ -104,7 +104,7 @@ class UpdateProductQuantityControllerTest extends ControllerTestSupport {
         void error2() throws Exception {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
-                .isPurchased(true)
+                .updateType("PURCHASE")
                 .build();
             String authorization = "testToken";
             String productId = "10";
@@ -134,7 +134,7 @@ class UpdateProductQuantityControllerTest extends ControllerTestSupport {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
                 .productCount(-1)
-                .isPurchased(true)
+                .updateType("PURCHASE")
                 .build();
             String authorization = "testToken";
             String productId = "10";
@@ -154,6 +154,95 @@ class UpdateProductQuantityControllerTest extends ControllerTestSupport {
                 .andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.data.errorCode").value(1001))
                 .andExpect(jsonPath("$.data.errorMessage").value("상품 수량은 1 이상 이어야 합니다"))
+                .andDo(print());
+        }
+
+        @Test
+        @WithMockUser(roles = "SELLER")
+        @DisplayName("[error] 인증받은 사용자가 사용자가 수정타입을 입력하지 않았을 때400코드와 에러 메시지를 응답한다.")
+        void error4() throws Exception {
+            // given
+            UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
+                .productCount(1)
+                .build();
+            String authorization = "testToken";
+            String productId = "10";
+
+            // when
+            ResultActions actions = mockMvc.perform(put("/products/{productId}/quantity", productId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", authorization)
+                .content(objectMapper.writeValueAsString(request))
+            );
+
+            // then
+            actions.andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.httpStatus").value(400))
+                .andExpect(jsonPath("$.message").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.data.errorCode").value(1001))
+                .andExpect(jsonPath("$.data.errorMessage").value("수정 타입은 필수 값 입니다"))
+                .andDo(print());
+        }
+
+        @Test
+        @WithMockUser(roles = "SELLER")
+        @DisplayName("[error] 인증받은 사용자가 사용자가 수정타입을 빈 값으로 입력 했을 때 400코드와 에러 메시지를 응답한다.")
+        void error5() throws Exception {
+            // given
+            UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
+                .productCount(1)
+                .updateType("")
+                .build();
+            String authorization = "testToken";
+            String productId = "10";
+
+            // when
+            ResultActions actions = mockMvc.perform(put("/products/{productId}/quantity", productId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", authorization)
+                .content(objectMapper.writeValueAsString(request))
+            );
+
+            // then
+            actions.andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.httpStatus").value(400))
+                .andExpect(jsonPath("$.message").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.data.errorCode").value(1001))
+                .andExpect(jsonPath("$.data.errorMessage").value("수정 타입은 필수 값 입니다"))
+                .andDo(print());
+        }
+
+        @Test
+        @WithMockUser(roles = "SELLER")
+        @DisplayName("[error] 인증받은 사용자가 사용자가 유효하지 않은 수정타입을 입력 했을 때 400코드와 에러 메시지를 응답한다.")
+        void error6() throws Exception {
+            // given
+            UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
+                .productCount(1)
+                .updateType("error")
+                .build();
+            String authorization = "testToken";
+            String productId = "10";
+
+            // when
+            ResultActions actions = mockMvc.perform(put("/products/{productId}/quantity", productId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", authorization)
+                .content(objectMapper.writeValueAsString(request))
+            );
+
+            // then
+            actions.andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.httpStatus").value(400))
+                .andExpect(jsonPath("$.message").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.data.errorCode").value(1001))
+                .andExpect(jsonPath("$.data.errorMessage").value("유효하지 않은 수정 타입 입니다"))
                 .andDo(print());
         }
     }

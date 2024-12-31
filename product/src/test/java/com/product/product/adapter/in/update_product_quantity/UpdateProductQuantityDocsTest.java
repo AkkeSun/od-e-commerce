@@ -53,7 +53,7 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
                 .productCount(10)
-                .isPurchased(true)
+                .updateType("PURCHASE")
                 .build();
             String authorization = "testToken";
             Long productId = 10L;
@@ -73,7 +73,7 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
                 .productCount(10)
-                .isPurchased(true)
+                .updateType("PURCHASE")
                 .build();
             String authorization = "testToken";
             Long productId = 10L;
@@ -91,7 +91,7 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
         void error2() throws Exception {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
-                .isPurchased(true)
+                .updateType("PURCHASE")
                 .productCount(0)
                 .build();
             String authorization = "testToken";
@@ -104,11 +104,46 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
 
         @Test
         @WithMockUser(roles = "SELLER")
+        @DisplayName("[error] 인증받은 사용자가 사용자가 수정 타입을 입력하지 않았을 때 400코드와 에러 메시지를 응답한다.")
+        void error5() throws Exception {
+            // given
+            UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
+                .updateType("")
+                .productCount(0)
+                .build();
+            String authorization = "testToken";
+            String productId = "10";
+
+            // when // then
+            performError(Long.parseLong(productId), request, authorization, status().isBadRequest(),
+                "[update-product-quantity] 수정 타입 미입력");
+        }
+
+        @Test
+        @WithMockUser(roles = "SELLER")
+        @DisplayName("[error] 인증받은 사용자가 사용자가 유효하지 않은 수정 타입을 입력했을 때 400코드와 에러 메시지를 응답한다.")
+        void error6() throws Exception {
+            // given
+            UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
+                .updateType("error")
+                .productCount(0)
+                .build();
+            String authorization = "testToken";
+            String productId = "10";
+
+            // when // then
+            performError(Long.parseLong(productId), request, authorization, status().isBadRequest(),
+                "[update-product-quantity] 유효하지 않은 수정 타입 입력");
+        }
+
+
+        @Test
+        @WithMockUser(roles = "SELLER")
         @DisplayName("[error] 인증받은 사용자가 사용자가 입력한 상품코드가 존재하지 않을 경우 예외를 응답한다.")
         void error3() throws Exception {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
-                .isPurchased(true)
+                .updateType("PURCHASE")
                 .productCount(1)
                 .build();
             String authorization = "testToken";
@@ -127,7 +162,7 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
         void error4() throws Exception {
             // given
             UpdateProductQuantityRequest request = UpdateProductQuantityRequest.builder()
-                .isPurchased(true)
+                .updateType("PURCHASE")
                 .productCount(99)
                 .build();
             String authorization = "testToken";
@@ -162,15 +197,14 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
                             .description("상품 수량을 변경하는 API 입니다. <br><br>"
                                 + "1. 테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다. (요청 헤더에 인증 토큰을 입력하여 테스트하지 않습니다) <br>"
                                 + "2. 인증받은 사용자만 호출 가능 합니다. <br>"
-                                + "3. 상품 수량, 구매 여부는 필수값 입니다. <br>"
+                                + "3. 상품 수량, 수정 타입은 필수값 입니다. <br>"
                                 + "4. 구매 여부가 true 일 경우 상품 수량이 감소하고, false 일 경우 상품 수량이 증가합니다.")
                             .requestFields(
                                 fieldWithPath("productCount").type(JsonFieldType.NUMBER)
                                     .description("상품 수량 (1 이상)"),
-                                fieldWithPath("isPurchased").type(JsonFieldType.BOOLEAN)
+                                fieldWithPath("updateType").type(JsonFieldType.STRING)
                                     .description(
-                                        "구매 여부 (true: 구매자로 인한 상품수량 감소, false: 판매자로 인한 상품수량 증가)")
-                                    .optional()
+                                        "수정 타입 (PURCHASE: 구매, REFUND: 환불, ADD_QUANTITY: 상품 수량 증가)")
                             )
                             .responseFields(
                                 fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
@@ -211,15 +245,14 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
                             .description("상품 수량을 변경하는 API 입니다. <br><br>"
                                 + "1. 테스트시 우측 자물쇠를 클릭하여 유효한 인증 토큰을 입력해야 정상 테스트가 가능합니다. (요청 헤더에 인증 토큰을 입력하여 테스트하지 않습니다) <br>"
                                 + "2. 인증받은 사용자만 호출 가능 합니다. <br>"
-                                + "3. 상품 수량, 구매 여부는 필수값 입니다. <br>"
+                                + "3. 상품 수량, 수정 타입은 필수값 입니다. <br>"
                                 + "4. 구매 여부가 true 일 경우 상품 수량이 감소하고, false 일 경우 상품 수량이 증가합니다.")
                             .requestFields(
                                 fieldWithPath("productCount").type(JsonFieldType.NUMBER)
                                     .description("상품 수량 (1 이상)"),
-                                fieldWithPath("isPurchased").type(JsonFieldType.BOOLEAN)
+                                fieldWithPath("updateType").type(JsonFieldType.STRING)
                                     .description(
-                                        "구매 여부 (true: 구매자로 인한 상품수량 감소, false: 판매자로 인한 상품수량 증가)")
-                                    .optional()
+                                        "수정 타입 (PURCHASE: 구매, REFUND: 환불, ADD_QUANTITY: 상품 수량 증가)")
                             )
                             .responseFields(
                                 fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)

@@ -1,10 +1,10 @@
 package com.product.product.application.port.out;
 
+import com.product.product.application.port.in.command.UpdateProductQuantityCommand;
 import com.product.product.domain.Product;
 
 public interface UpdateProductPort {
 
-    Product updateProductSaleInfo(Product product, Long accountId, int productCount);
-
-    Product updateProductQuantity(Product product, int quantity);
+    Product updateProductQuantity(Product product, Long accountId,
+        UpdateProductQuantityCommand command);
 }
