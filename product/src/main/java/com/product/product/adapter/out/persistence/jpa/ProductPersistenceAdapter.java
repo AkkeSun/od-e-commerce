@@ -3,12 +3,14 @@ package com.product.product.adapter.out.persistence.jpa;
 import com.product.global.util.ShardKeyUtil;
 import com.product.product.adapter.out.persistence.jpa.shard1.ProductShard1Adapter;
 import com.product.product.adapter.out.persistence.jpa.shard2.ProductShard2Adapter;
+import com.product.product.application.port.in.command.UpdateProductQuantityCommand;
 import com.product.product.application.port.out.DeleteProductPort;
 import com.product.product.application.port.out.FindProductPort;
 import com.product.product.application.port.out.RegisterProductPort;
 import com.product.product.application.port.out.UpdateProductPort;
 import com.product.product.domain.Product;
 import com.product.product.domain.ProductHistory;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -36,24 +38,25 @@ class ProductPersistenceAdapter implements FindProductPort,
     }
 
     @Override
-    public ProductHistory findHistoryByProductIdAndAccountId(Long productId, Long accountId) {
+    public boolean existsById(Long id) {
+        return shardKeyUtil.isShard1(id) ?
+            productShard1Adapter.existsById(id) : productShard2Adapter.existsById(id);
+    }
+
+    @Override
+    public List<ProductHistory> findHistoryByProductIdAndAccountId(Long productId,
+        Long accountId) {
         return shardKeyUtil.isShard1(productId) ?
             productShard1Adapter.findHistoryByProductIdAndAccountId(productId, accountId) :
             productShard2Adapter.findHistoryByProductIdAndAccountId(productId, accountId);
     }
 
     @Override
-    public Product updateProductSaleInfo(Product product, Long accountId, int productCount) {
+    public Product updateProductQuantity(Product product, Long accountId,
+        UpdateProductQuantityCommand command) {
         return shardKeyUtil.isShard1(product.getProductId()) ?
-            productShard1Adapter.updateProductSaleInfo(product, accountId, productCount) :
-            productShard2Adapter.updateProductSaleInfo(product, accountId, productCount);
-    }
-
-    @Override
-    public Product updateProductQuantity(Product product, int quantity) {
-        return shardKeyUtil.isShard1(product.getProductId()) ?
-            productShard1Adapter.updateProductQuantity(product, quantity) :
-            productShard2Adapter.updateProductQuantity(product, quantity);
+            productShard1Adapter.updateProductQuantity(product, accountId, command) :
+            productShard2Adapter.updateProductQuantity(product, accountId, command);
     }
 
     @Override

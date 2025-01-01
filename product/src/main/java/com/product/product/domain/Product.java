@@ -87,13 +87,18 @@ public class Product {
         return productOption != null && !productOption.isEmpty();
     }
 
-    public boolean isAvailableForSale(int salesCount) {
-        return 0 <= quantity - salesCount;
+    public boolean isAvailableForSale(int count) {
+        return 0 <= quantity - count;
     }
 
-    public void updateSaleCount(int salesCount) {
-        this.salesCount += salesCount;
-        this.quantity -= salesCount;
+    public void updatePurchaseCount(int count) {
+        this.salesCount += count;
+        this.quantity -= count;
+    }
+
+    public void updateRefundCount(int count) {
+        this.salesCount -= count;
+        this.quantity += count;
     }
 
     public void addQuantity(int quantity) {

@@ -18,7 +18,7 @@ class RegisterProductController {
     private final RegisterProductUseCase registerProductUseCase;
 
     @PostMapping("/products")
-    ApiResponse<?> registerProduct(
+    ApiResponse<RegisterProductResponse> registerProduct(
         @Validated(ValidationSequence.class) @RequestBody RegisterProductRequest request,
         @RequestHeader(name = "Authorization", required = false) String authorization) {
 

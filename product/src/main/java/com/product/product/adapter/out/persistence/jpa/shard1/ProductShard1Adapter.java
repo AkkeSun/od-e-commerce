@@ -4,6 +4,7 @@ import com.product.global.exception.CustomNotFoundException;
 import com.product.global.exception.ErrorCode;
 import com.product.global.util.DateUtil;
 import com.product.global.util.SnowflakeGenerator;
+import com.product.product.application.port.in.command.UpdateProductQuantityCommand;
 import com.product.product.application.port.out.DeleteProductPort;
 import com.product.product.application.port.out.FindProductPort;
 import com.product.product.application.port.out.RegisterProductPort;
@@ -12,6 +13,7 @@ import com.product.product.domain.HistoryType;
 import com.product.product.domain.Product;
 import com.product.product.domain.ProductHistory;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,40 +44,32 @@ public class ProductShard1Adapter implements RegisterProductPort, FindProductPor
     }
 
     @Override
-    public ProductHistory findHistoryByProductIdAndAccountId(Long productId, Long accountId) {
-        ProductHistoryShard1Entity entity = productHistoryRepository
-            .findByProductIdAndAccountId(productId, accountId);
-
-        return entity == null ? null : productMapper.toDomain(entity);
+    public boolean existsById(Long id) {
+        return productRepository.existsById(id);
     }
 
     @Override
-    public Product updateProductSaleInfo(Product product, Long accountId, int productCount) {
+    public List<ProductHistory> findHistoryByProductIdAndAccountId(Long productId, Long accountId) {
+        return productHistoryRepository
+            .findByProductIdAndAccountId(productId, accountId).stream()
+            .map(productMapper::toDomain)
+            .toList();
+    }
+
+    @Override
+    public Product updateProductQuantity(Product product, Long accountId,
+        UpdateProductQuantityCommand command) {
         productRepository.updateSalesCountAndQuantity(product);
         productHistoryRepository.save(ProductHistoryShard1Entity.builder()
             .id(snowflakeGenerator.nextId())
             .productId(product.getProductId())
             .accountId(accountId)
-            .type(HistoryType.SALES_COUNT)
-            .detailInfo(productCount + "")
+            .type(HistoryType.valueOf(command.updateType().name()))
+            .detailInfo(String.valueOf(command.productCount()))
             .regDate(dateUtil.getCurrentDate())
             .regDateTime(LocalDateTime.now())
             .build());
         return product;
-    }
-
-    @Override
-    public Product updateProductQuantity(Product product, int quantity) {
-        productRepository.updateQuantity(product);
-        productHistoryRepository.save(ProductHistoryShard1Entity.builder()
-            .id(snowflakeGenerator.nextId())
-            .productId(product.getProductId())
-            .type(HistoryType.QUANTITY)
-            .detailInfo("+" + quantity)
-            .regDate(dateUtil.getCurrentDate())
-            .regDateTime(LocalDateTime.now())
-            .build());
-        return null;
     }
 
     @Override

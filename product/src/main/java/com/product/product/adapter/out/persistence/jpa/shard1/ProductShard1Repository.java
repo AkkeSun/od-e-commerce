@@ -13,10 +13,4 @@ interface ProductShard1Repository extends JpaRepository<ProductShard1Entity, Lon
         + "    p.quantity = :#{#product.quantity} "
         + "where p.productId = :#{#product.productId} ")
     void updateSalesCountAndQuantity(Product product);
-
-    @Modifying
-    @Query("update ProductShard1Entity p "
-        + "set p.quantity = :#{#product.quantity} "
-        + "where p.productId = :#{#product.productId} ")
-    void updateQuantity(Product product);
 }
