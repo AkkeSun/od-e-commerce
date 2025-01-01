@@ -18,7 +18,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-    basePackages = {"com.product.product.adapter.out.persistence.jpa.shard1"},
+    basePackages = {
+        "com.product.product.adapter.out.persistence.jpa.shard1",
+        "com.product.review.adapter.out.persistence.jpa.shard1"
+    },
     entityManagerFactoryRef = "primaryEntityManagerFactory",
     transactionManagerRef = "primaryTransactionManager"
 )
@@ -49,7 +52,8 @@ public class Shard1DataSourceConfig {
     ) {
         return builder
             .dataSource(dataSource)
-            .packages("com.product.product.adapter.out.persistence.jpa.shard1")
+            .packages("com.product.product.adapter.out.persistence.jpa.shard1",
+                "com.product.review.adapter.out.persistence.jpa.shard1")
             .persistenceUnit("primaryEntityManager")
             .build();
     }
