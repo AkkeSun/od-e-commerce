@@ -32,13 +32,15 @@ class FindProductListService implements FindProductListUseCase {
     private final FindProductVectorPort findProductVectorPort;
     @Value("${service-constant.product.response-page-size}")
     private int responsePageSize;
+    @Value("${kafka.topic.product-search-keyword}")
+    private String topicName;
 
     @Override
     public List<FindProductListServiceResponse> findProductList(FindProductListCommand command) {
         if (command.isSearchKeywordSaveNeeded()) {
             ObjectNode objectNode = jsonUtil.toObjectNode(command);
             objectNode.put("regDateTime", dateUtil.getCurrentDateTime());
-            produceProductPort.sendMessage("product-search-keyword-topic", objectNode.toString());
+            produceProductPort.sendMessage(topicName, objectNode.toString());
         }
 
         // ------ STEP 1 : cache search ------

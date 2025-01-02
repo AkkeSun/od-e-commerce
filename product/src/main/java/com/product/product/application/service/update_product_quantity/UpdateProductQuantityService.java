@@ -17,6 +17,7 @@ import com.product.product.domain.Product;
 import com.product.product.domain.QuantityType;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,6 +29,8 @@ class UpdateProductQuantityService implements UpdateProductQuantityUseCase {
     private final FindProductPort findProductPort;
     private final UpdateProductPort updateProductPort;
     private final ProduceProductPort produceProductPort;
+    @Value("${kafka.topic.update-quantity}")
+    private String topicName;
 
     @Override
     @DistributedLock(key = "updateProductQuantity")
@@ -57,7 +60,7 @@ class UpdateProductQuantityService implements UpdateProductQuantityUseCase {
         updateProductPort.updateProductQuantity(product, accountId, command);
         //TODO; 로직 검토 필요 (환불의 경우 대응)
         if (!command.updateType().equals(QuantityType.ADD_QUANTITY)) {
-            produceProductPort.sendMessage("product-update-quantity-topic",
+            produceProductPort.sendMessage(topicName,
                 jsonUtil.toJsonString(product));
         }
 
