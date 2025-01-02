@@ -7,6 +7,7 @@ import com.product.global.util.JwtUtil;
 import com.product.product.application.port.in.FindProductListUseCase;
 import com.product.product.application.port.in.RegisterProductUseCase;
 import com.product.product.application.port.in.UpdateProductQuantityUseCase;
+import com.product.review.application.port.in.RegisterReviewUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -37,5 +38,8 @@ public class ControllerTestSupport {
 
     @MockBean
     protected UpdateProductQuantityUseCase updateProductSalesUseCase;
+
+    @MockBean
+    protected RegisterReviewUseCase registerReviewUseCase;
 
 }
