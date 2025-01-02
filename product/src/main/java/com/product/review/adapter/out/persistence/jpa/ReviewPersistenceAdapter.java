@@ -7,8 +7,10 @@ import com.product.review.application.port.out.DeleteReviewPort;
 import com.product.review.application.port.out.FindReviewPort;
 import com.product.review.application.port.out.RegisterReviewPort;
 import com.product.review.domain.Review;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Primary
@@ -32,6 +34,13 @@ class ReviewPersistenceAdapter implements RegisterReviewPort, FindReviewPort, De
         return shardKeyUtil.isShard1(ProductId) ?
             reviewShard1Adapter.existsByProductIdAndAccountId(ProductId, AccountId) :
             reviewShard2Adapter.existsByProductIdAndAccountId(ProductId, AccountId);
+    }
+
+    @Override
+    public List<Review> findByProductId(Long productId, Pageable pageable) {
+        return shardKeyUtil.isShard1(productId) ?
+            reviewShard1Adapter.findByProductId(productId, pageable) :
+            reviewShard2Adapter.findByProductId(productId, pageable);
     }
 
     @Override

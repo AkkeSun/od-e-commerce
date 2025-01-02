@@ -4,7 +4,9 @@ import com.product.review.application.port.out.DeleteReviewPort;
 import com.product.review.application.port.out.FindReviewPort;
 import com.product.review.application.port.out.RegisterReviewPort;
 import com.product.review.domain.Review;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,13 @@ public class ReviewShard2Adapter implements RegisterReviewPort, FindReviewPort, 
     @Override
     public boolean existsByProductIdAndAccountId(Long ProductId, Long AccountId) {
         return reviewRepository.existsByProductIdAndAccountId(ProductId, AccountId);
+    }
+
+    @Override
+    public List<Review> findByProductId(Long productId, Pageable pageable) {
+        return reviewRepository.findByProductId(productId, pageable).stream()
+            .map(reviewMapper::toDomain)
+            .toList();
     }
 
     @Override
