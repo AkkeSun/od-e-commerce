@@ -51,7 +51,11 @@ jwt:
 
 kafka:
   host: localhost:29092
-
+  topic:
+    product-search-keyword: product-search-keyword-topic
+    update-quantity: product-update-quantity-topic
+    register-review: product-review-cnt-topic
+    
 resilience4j:
   circuitbreaker:
     configs:
