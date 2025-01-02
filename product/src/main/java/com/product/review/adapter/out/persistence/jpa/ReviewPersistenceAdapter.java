@@ -3,6 +3,7 @@ package com.product.review.adapter.out.persistence.jpa;
 import com.product.global.util.ShardKeyUtil;
 import com.product.review.adapter.out.persistence.jpa.shard1.ReviewShard1Adapter;
 import com.product.review.adapter.out.persistence.jpa.shard2.ReviewShard2Adapter;
+import com.product.review.application.port.out.DeleteReviewPort;
 import com.product.review.application.port.out.FindReviewPort;
 import com.product.review.application.port.out.RegisterReviewPort;
 import com.product.review.domain.Review;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Primary
 @Component
 @RequiredArgsConstructor
-class ReviewPersistenceAdapter implements RegisterReviewPort, FindReviewPort {
+class ReviewPersistenceAdapter implements RegisterReviewPort, FindReviewPort, DeleteReviewPort {
 
     private final ShardKeyUtil shardKeyUtil;
     private final ReviewShard1Adapter reviewShard1Adapter;
@@ -31,5 +32,14 @@ class ReviewPersistenceAdapter implements RegisterReviewPort, FindReviewPort {
         return shardKeyUtil.isShard1(ProductId) ?
             reviewShard1Adapter.existsByProductIdAndAccountId(ProductId, AccountId) :
             reviewShard2Adapter.existsByProductIdAndAccountId(ProductId, AccountId);
+    }
+
+    @Override
+    public void deleteByProductIdAndAccountId(Long productId, Long accountId) {
+        if (shardKeyUtil.isShard1(productId)) {
+            reviewShard1Adapter.deleteByProductIdAndAccountId(productId, accountId);
+        } else {
+            reviewShard2Adapter.deleteByProductIdAndAccountId(productId, accountId);
+        }
     }
 }

@@ -69,4 +69,16 @@ class ProductShard1Mapper {
             .regDateTime(entity.getRegDateTime())
             .build();
     }
+
+    ProductHistoryShard1Entity toEntity(ProductHistory productHistory) {
+        return ProductHistoryShard1Entity.builder()
+            .id(productHistory.getId())
+            .productId(productHistory.getProductId())
+            .accountId(productHistory.getAccountId())
+            .type(productHistory.getType())
+            .detailInfo(productHistory.getDetailInfo())
+            .regDate(productHistory.getRegDate())
+            .regDateTime(productHistory.getRegDateTime())
+            .build();
+    }
 }

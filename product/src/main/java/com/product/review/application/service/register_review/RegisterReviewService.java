@@ -3,9 +3,11 @@ package com.product.review.application.service.register_review;
 import com.product.global.exception.CustomBusinessException;
 import com.product.global.exception.CustomNotFoundException;
 import com.product.global.exception.ErrorCode;
+import com.product.global.util.JsonUtil;
 import com.product.global.util.JwtUtil;
 import com.product.global.util.SnowflakeGenerator;
 import com.product.product.application.port.out.FindProductPort;
+import com.product.product.application.port.out.ProduceProductPort;
 import com.product.product.domain.HistoryType;
 import com.product.product.domain.ProductHistory;
 import com.product.review.application.port.in.RegisterReviewUseCase;
@@ -20,17 +22,22 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 class RegisterReviewService implements RegisterReviewUseCase {
 
+    private final JsonUtil jsonUtil;
+    private final SnowflakeGenerator snowflakeGenerator;
     private final JwtUtil jwtUtil;
     private final FindReviewPort findReviewPort;
     private final FindProductPort findProductPort;
+    private final ProduceProductPort produceProductPort;
     private final RegisterReviewPort registerReviewPort;
-    private final SnowflakeGenerator snowflakeGenerator;
+    @Value("${kafka.topic.register-review}")
+    private String topicName;
 
     @NewSpan
     @Override
@@ -57,6 +64,8 @@ class RegisterReviewService implements RegisterReviewUseCase {
             .regDate(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
             .regDateTime(LocalDateTime.now())
             .build());
+
+        produceProductPort.sendMessage(topicName, jsonUtil.toJsonString(savedReviewInfo));
 
         return RegisterReviewServiceResponse.builder()
             .id(savedReviewInfo.getId())

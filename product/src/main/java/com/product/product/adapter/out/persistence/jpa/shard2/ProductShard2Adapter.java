@@ -37,6 +37,12 @@ public class ProductShard2Adapter implements RegisterProductPort, FindProductPor
     }
 
     @Override
+    public ProductHistory registerHistory(ProductHistory productHistory) {
+        ProductHistoryShard2Entity entity = productMapper.toEntity(productHistory);
+        return productMapper.toDomain(productHistoryRepository.save(entity));
+    }
+
+    @Override
     public Product findById(Long id) {
         ProductShard2Entity entity = productRepository.findById(id)
             .orElseThrow(() -> new CustomNotFoundException(ErrorCode.DoesNotExist_PROUCT_INFO));
@@ -79,7 +85,7 @@ public class ProductShard2Adapter implements RegisterProductPort, FindProductPor
 
     @Override
     public void deleteAll() {
-        productRepository.deleteAll();
         productHistoryRepository.deleteAll();
+        productRepository.deleteAll();
     }
 }

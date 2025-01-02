@@ -32,6 +32,13 @@ class ProductPersistenceAdapter implements FindProductPort,
     }
 
     @Override
+    public ProductHistory registerHistory(ProductHistory productHistory) {
+        return shardKeyUtil.isShard1(productHistory.getProductId()) ?
+            productShard1Adapter.registerHistory(productHistory) :
+            productShard2Adapter.registerHistory(productHistory);
+    }
+
+    @Override
     public Product findById(Long id) {
         return shardKeyUtil.isShard1(id) ?
             productShard1Adapter.findById(id) : productShard2Adapter.findById(id);

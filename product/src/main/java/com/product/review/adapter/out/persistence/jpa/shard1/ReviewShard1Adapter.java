@@ -1,5 +1,6 @@
 package com.product.review.adapter.out.persistence.jpa.shard1;
 
+import com.product.review.application.port.out.DeleteReviewPort;
 import com.product.review.application.port.out.FindReviewPort;
 import com.product.review.application.port.out.RegisterReviewPort;
 import com.product.review.domain.Review;
@@ -10,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 @Transactional("primaryTransactionManager")
-public class ReviewShard1Adapter implements RegisterReviewPort, FindReviewPort {
+public class ReviewShard1Adapter implements RegisterReviewPort, FindReviewPort, DeleteReviewPort {
 
     private final ReviewShard1Mapper reviewMapper;
     private final ReviewShard1Repository reviewRepository;
@@ -24,5 +25,10 @@ public class ReviewShard1Adapter implements RegisterReviewPort, FindReviewPort {
     @Override
     public boolean existsByProductIdAndAccountId(Long ProductId, Long AccountId) {
         return reviewRepository.existsByProductIdAndAccountId(ProductId, AccountId);
+    }
+
+    @Override
+    public void deleteByProductIdAndAccountId(Long productId, Long accountId) {
+        reviewRepository.deleteByProductIdAndAccountId(productId, accountId);
     }
 }
