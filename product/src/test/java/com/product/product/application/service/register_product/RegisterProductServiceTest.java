@@ -35,7 +35,7 @@ class RegisterProductServiceTest extends IntegrationTestSupport {
     class Describe_registerProduct {
 
         @Test
-        @DisplayName("[success] 상품이 정상적으로 등록되느지 확인한다.")
+        @DisplayName("[success] 상품이 정상적으로 등록되는지 확인한다.")
         void success() throws InterruptedException {
             // given
             RegisterProductCommand command = RegisterProductCommand.builder()

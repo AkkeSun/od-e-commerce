@@ -5,6 +5,7 @@ import com.product.global.config.SecurityConfig;
 import com.product.global.util.JsonUtil;
 import com.product.global.util.JwtUtil;
 import com.product.product.application.port.in.FindProductListUseCase;
+import com.product.product.application.port.in.FindProductUseCase;
 import com.product.product.application.port.in.RegisterProductUseCase;
 import com.product.product.application.port.in.UpdateProductQuantityUseCase;
 import com.product.review.application.port.in.RegisterReviewUseCase;
@@ -42,4 +43,6 @@ public class ControllerTestSupport {
     @MockBean
     protected RegisterReviewUseCase registerReviewUseCase;
 
+    @MockBean
+    protected FindProductUseCase findProductUseCase;
 }
