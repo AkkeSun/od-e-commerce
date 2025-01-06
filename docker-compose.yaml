@@ -112,6 +112,8 @@ services:
     environment:
       - discovery.type=single-node
       - ELASTIC_PASSWORD=1234
+      - xpack.security.enabled=false  # 보안 기능 비활성화
+      - xpack.security.http.ssl.enabled=false  # SSL 비활성화
     ports:
       - "9200:9200"
     networks:
