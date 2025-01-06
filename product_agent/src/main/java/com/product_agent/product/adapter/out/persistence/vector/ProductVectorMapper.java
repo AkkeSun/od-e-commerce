@@ -2,6 +2,7 @@ package com.product_agent.product.adapter.out.persistence.vector;
 
 import com.product_agent.product.domain.Product;
 import dev.langchain4j.data.document.Metadata;
+import java.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,7 +17,8 @@ public class ProductVectorMapper {
         metadata.put("productImg", product.getProductImg());
         metadata.put("price", product.getPrice());
         metadata.put("category", product.getCategory().name());
-        metadata.put("regDateTime", String.valueOf(product.getRegDateTime()));
+        metadata.put("regDateTime",
+            product.getRegDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         return metadata;
     }
 }
