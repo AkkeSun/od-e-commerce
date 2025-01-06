@@ -51,4 +51,13 @@ class ReviewPersistenceAdapter implements RegisterReviewPort, FindReviewPort, De
             reviewShard2Adapter.deleteByProductIdAndAccountId(productId, accountId);
         }
     }
+
+    @Override
+    public void deleteByProductId(Long productId) {
+        if (shardKeyUtil.isShard1(productId)) {
+            reviewShard1Adapter.deleteByProductId(productId);
+        } else {
+            reviewShard2Adapter.deleteByProductId(productId);
+        }
+    }
 }

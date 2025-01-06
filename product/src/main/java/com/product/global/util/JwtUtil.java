@@ -7,4 +7,6 @@ public interface JwtUtil {
     boolean validateTokenExceptExpiration(String token);
 
     Claims getClaims(String token);
+
+    Long getAccountId(String token);
 }

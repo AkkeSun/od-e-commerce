@@ -14,5 +14,10 @@ interface ReviewShard1Repository extends JpaRepository<ReviewShard1Entity, Long>
     @Query("delete from ReviewShard1Entity r where r.productId = :productId and r.accountId = :accountId")
     void deleteByProductIdAndAccountId(Long productId, Long accountId);
 
+    @Modifying
+    @Query("delete from ReviewShard1Entity r where r.productId = :productId")
+    void deleteByProductId(Long productId);
+    
     List<ReviewShard1Entity> findByProductId(Long productId, Pageable pageable);
+
 }

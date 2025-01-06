@@ -40,6 +40,7 @@ class RegisterProductService implements RegisterProductUseCase {
         try {
             registerProductEsPort.register(savedProduct);
         } catch (Exception e) {
+            log.debug("[registerProduct] elasticsearch save error : {}", e.getMessage());
             deleteProductPort.deleteById(savedProduct.getProductId());
             throw new CustomBusinessException(Business_ES_PRODUCT_SAVE);
         }

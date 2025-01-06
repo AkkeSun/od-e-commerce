@@ -35,4 +35,10 @@ public class JwtUtilImpl implements JwtUtil {
             throw new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN);
         }
     }
+
+    @Override
+    public Long getAccountId(String token) {
+        Claims claims = getClaims(token);
+        return claims.get("accountId", Integer.class).longValue();
+    }
 }

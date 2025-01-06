@@ -4,13 +4,11 @@ import com.product.product.application.port.in.command.FindProductListCommand;
 import com.product.product.application.port.out.FindProductVectorPort;
 import com.product.product.domain.Category;
 import com.product.product.domain.Product;
-import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.chroma.ChromaEmbeddingStore;
 import dev.langchain4j.store.embedding.filter.comparison.IsEqualTo;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,12 +39,6 @@ class ProductVectorPersistenceAdapter implements FindProductVectorPort {
                 .filter(new IsEqualTo("category", command.category().name()))
                 .build();
         }
-        
-        List<Metadata> result = embeddingStore.search(request).matches()
-            .stream()
-            .map(match -> match.embedded().metadata())
-            .toList();
-
         return embeddingStore.search(request).matches()
             .stream()
             .map(match -> productVectorMapper.toDomain(match.embedded().metadata()))

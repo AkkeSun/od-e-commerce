@@ -40,4 +40,9 @@ public class ReviewShard1Adapter implements RegisterReviewPort, FindReviewPort, 
     public void deleteByProductIdAndAccountId(Long productId, Long accountId) {
         reviewRepository.deleteByProductIdAndAccountId(productId, accountId);
     }
+
+    @Override
+    public void deleteByProductId(Long productId) {
+        reviewRepository.deleteByProductId(productId);
+    }
 }
