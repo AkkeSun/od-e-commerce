@@ -1,6 +1,7 @@
 package com.product.product.adapter.in.update_product_quantity;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
+import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -55,7 +56,7 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
                 .productCount(10)
                 .updateType("PURCHASE")
                 .build();
-            String authorization = "testToken";
+            String authorization = "Bearer token";
             Long productId = 10L;
             UpdateProductQuantityServiceResponse response = UpdateProductQuantityServiceResponse.builder()
                 .result("Y")
@@ -75,10 +76,10 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
                 .productCount(10)
                 .updateType("PURCHASE")
                 .build();
-            String authorization = "testToken";
+            String authorization = "Bearer token";
             Long productId = 10L;
             given(updateProductSalesUseCase.updateProductQuantity(any())).willThrow(
-                new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN));
+                new CustomAuthenticationException(ErrorCode.INVALID_ACCESS_TOKEN_BY_SECURITY));
 
             // when // then
             performError(productId, request, authorization, status().isUnauthorized(),
@@ -94,7 +95,7 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
                 .updateType("PURCHASE")
                 .productCount(0)
                 .build();
-            String authorization = "testToken";
+            String authorization = "Bearer token";
             String productId = "10";
 
             // when // then
@@ -128,7 +129,7 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
                 .updateType("error")
                 .productCount(0)
                 .build();
-            String authorization = "testToken";
+            String authorization = "Bearer token";
             String productId = "10";
 
             // when // then
@@ -146,7 +147,7 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
                 .updateType("PURCHASE")
                 .productCount(1)
                 .build();
-            String authorization = "testToken";
+            String authorization = "Bearer token";
             String productId = "99";
             given(updateProductSalesUseCase.updateProductQuantity(any())).willThrow(
                 new CustomNotFoundException(ErrorCode.DoesNotExist_PROUCT_INFO));
@@ -165,7 +166,7 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
                 .updateType("PURCHASE")
                 .productCount(99)
                 .build();
-            String authorization = "testToken";
+            String authorization = "Bearer token";
             String productId = "111";
             given(updateProductSalesUseCase.updateProductQuantity(any())).willThrow(
                 new CustomBusinessException(ErrorCode.Business_OUT_OF_STOCK));
@@ -206,6 +207,7 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
                                     .description(
                                         "수정 타입 (PURCHASE: 구매, REFUND: 환불, ADD_QUANTITY: 상품 수량 증가)")
                             )
+                            .pathParameters(parameterWithName("productId").description("상품 코드"))
                             .responseFields(
                                 fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
                                     .description("상태 코드"),
@@ -254,6 +256,7 @@ class UpdateProductQuantityDocsTest extends RestDocsSupport {
                                     .description(
                                         "수정 타입 (PURCHASE: 구매, REFUND: 환불, ADD_QUANTITY: 상품 수량 증가)")
                             )
+                            .pathParameters(parameterWithName("productId").description("상품 코드"))
                             .responseFields(
                                 fieldWithPath("httpStatus").type(JsonFieldType.NUMBER)
                                     .description("상태 코드"),
