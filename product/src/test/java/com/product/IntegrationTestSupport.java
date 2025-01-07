@@ -75,4 +75,17 @@ public class IntegrationTestSupport {
             .signWith(SignatureAlgorithm.HS256, secretKey)
             .compact();
     }
+
+    protected String createAccessToken(String role, Long accountId) {
+        Date now = new Date();
+        Claims claims = Jwts.claims().setSubject("od@sweettracker.co.kr");
+        claims.put("accountId", accountId);
+        claims.put("role", role);
+        return "Bearer " + Jwts.builder()
+            .setClaims(claims)
+            .setIssuedAt(now)
+            .setExpiration(new Date(now.getTime() + 60000))
+            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .compact();
+    }
 }

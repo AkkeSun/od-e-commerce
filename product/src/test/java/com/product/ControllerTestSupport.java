@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.product.global.config.SecurityConfig;
 import com.product.global.util.JsonUtil;
 import com.product.global.util.JwtUtil;
+import com.product.product.application.port.in.DeleteProductUseCase;
 import com.product.product.application.port.in.FindProductListUseCase;
 import com.product.product.application.port.in.FindProductUseCase;
 import com.product.product.application.port.in.RegisterProductUseCase;
@@ -45,4 +46,7 @@ public class ControllerTestSupport {
 
     @MockBean
     protected FindProductUseCase findProductUseCase;
+
+    @MockBean
+    protected DeleteProductUseCase deleteProductUseCase;
 }

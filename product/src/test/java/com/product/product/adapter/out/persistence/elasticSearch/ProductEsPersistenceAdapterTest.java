@@ -402,4 +402,41 @@ class ProductEsPersistenceAdapterTest extends IntegrationTestSupport {
             assertThat(productSet.size()).isEqualTo(0);
         }
     }
+
+    @Nested
+    @DisplayName("[deleteById] 아이디로 상품 정보를 삭제하는 메소드")
+    class Describe_deleteById {
+
+        @Test
+        @DisplayName("[success] 상품 아이디로 상품 정보를 삭제하는지 확인한다.")
+        void success() {
+            // given
+            Product product = Product.builder()
+                .productId(25L)
+                .productName("od 신발")
+                .price(10000)
+                .description("테스트 상품 입니다")
+                .category(Category.AUTOMOTIVE)
+                .embeddingYn("N")
+                .productOption(new ArrayList<>())
+                .price(10000)
+                .quantity(50)
+                .reviewCount(0)
+                .reviewScore(0)
+                .totalScore(0)
+                .hitCount(0)
+                .sellerEmail("12345")
+                .regDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                .regDateTime(LocalDateTime.now())
+                .build();
+            productEsPersistenceAdapter.register(product);
+
+            // when
+            productEsPersistenceAdapter.deleteById(product.getProductId());
+            ProductEsDocument deletedDocument = findById(product.getProductId());
+
+            // then
+            assert deletedDocument == null;
+        }
+    }
 }
