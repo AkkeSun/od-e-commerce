@@ -9,6 +9,7 @@ import com.product.product.domain.Category;
 import com.product.product.domain.Product;
 import com.product.product.domain.ProductSortType;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,6 +52,12 @@ class ProductEsPersistenceAdapter implements RegisterProductEsPort, FindProductE
             .stream()
             .map(productMapper::toDomain)
             .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    @Override // for test
+    public Product findById(Long id) {
+        Optional<ProductEsDocument> optional = productEsRepository.findById(id);
+        return optional.map(productMapper::toDomain).orElse(null);
     }
 
     private Pageable makePageRequest(int page, int size, ProductSortType sortType) {

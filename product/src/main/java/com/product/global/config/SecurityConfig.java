@@ -49,6 +49,7 @@ public class SecurityConfig {
                 auth.requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                     .requestMatchers("/docs/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/products").hasRole("SELLER")
+                    .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("SELLER")
                     .anyRequest().authenticated();
             })
 

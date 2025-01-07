@@ -7,4 +7,6 @@ import java.util.LinkedHashSet;
 public interface FindProductEsPort {
 
     LinkedHashSet<Product> findByKeyword(FindProductListCommand command);
+
+    Product findById(Long id);
 }

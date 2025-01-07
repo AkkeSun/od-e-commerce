@@ -12,12 +12,12 @@ interface ProductEsRepository extends ElasticsearchRepository<ProductEsDocument,
                 "bool": {
                     "should": [
                         {
-                            "match": {
+                            "match_phrase": {
                                 "productName": "?0"
                             }
                         },
                         {
-                            "match": {
+                            "match_phrase": {
                                 "description": "?0"
                             }
                         }
@@ -40,12 +40,12 @@ interface ProductEsRepository extends ElasticsearchRepository<ProductEsDocument,
                     ],
                     "should": [
                         {
-                            "match": {
+                            "match_phrase": {
                                 "productName": "?1"
                             }
                         },
                         {
-                            "match": {
+                            "match_phrase": {
                                 "description": "?1"
                             }
                         }
